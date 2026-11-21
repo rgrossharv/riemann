@@ -100,7 +100,7 @@ Individual files can be browsed with Lean syntax colors, line numbers, find,
 folding, and an expandable repository tree. File downloads preserve the
 original bytes. Public visitors have no editing/upload/write endpoint.
 
-The proof map links logical steps to exact declarations. The quantitative
-layer profile and folder treemap use exact line counts on linear scales.
+The dependency layer profile and folder treemap use exact line counts on
+linear scales.
 Layer = shortest project-import distance from Main, with each file assigned
 once. Rectangle areas and bar segment heights are proportional to source lines.

@@ -1,3 +1,5 @@
+import {leanPath} from './archive-paths.js';
+
 export function createRepositoryExplorer(manifest, openFile) {
   const root={name:'text',path:'',directory:true,children:new Map(),count:0};
   for(const entry of manifest){
@@ -25,9 +27,9 @@ export function createRepositoryExplorer(manifest, openFile) {
   }
   function item(node,depth){
     const wrapper=document.createElement('div');wrapper.className='tree-entry';
-    const button=document.createElement('button');button.className='tree-item '+(node.directory?'tree-folder':'tree-file');button.setAttribute('role','treeitem');button.setAttribute('aria-level',depth+1);button.title=node.path;button.style.paddingLeft=(8+depth*13)+'px';button.dataset.path=node.path;
+    const button=document.createElement('button');button.className='tree-item '+(node.directory?'tree-folder':'tree-file');button.setAttribute('role','treeitem');button.setAttribute('aria-level',depth+1);button.title=node.directory?node.path:leanPath(node.path);button.style.paddingLeft=(8+depth*13)+'px';button.dataset.path=node.path;
     const icon=document.createElement('span');icon.className=node.directory?'folder-icon':'file-icon';icon.textContent=node.directory?'›':'λ';icon.setAttribute('aria-hidden','true');
-    const label=document.createElement('span');label.className='tree-name';label.textContent=node.name;
+    const label=document.createElement('span');label.className='tree-name';label.textContent=node.directory?node.name:leanPath(node.name);
     button.append(icon,label);
     node.button=button;wrapper.append(button);
     if(node.directory){

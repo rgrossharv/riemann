@@ -8,6 +8,7 @@ import hashlib
 import json
 import re
 import shutil
+from site_pages import write_pages
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
@@ -21,6 +22,7 @@ def write_gzip(path, value):
 def main():
     DIST.mkdir(exist_ok=True)
     shutil.copytree(ROOT / "website", DIST, dirs_exist_ok=True)
+    write_pages(DIST)
     (DIST / "data/packs").mkdir(parents=True, exist_ok=True)
     (DIST / "data/index").mkdir(parents=True, exist_ok=True)
     entries = json.loads((ROOT / "reports/files.json").read_text())

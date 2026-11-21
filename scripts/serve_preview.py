@@ -6,6 +6,7 @@ from pathlib import Path
 import shutil
 import threading
 import time
+from site_pages import write_pages
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -31,6 +32,8 @@ def synchronize():
                 temporary = target.with_suffix(target.suffix + '.tmp')
                 shutil.copyfile(source, temporary)
                 temporary.replace(target)
+                if relative == Path('index.html'):
+                    write_pages(ROOT / 'dist')
                 times[str(relative)] = stamp
         time.sleep(1)
 

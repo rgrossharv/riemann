@@ -1,19 +1,48 @@
-import {initializeProofGuide, renderGroupWeb, renderDependencyLayers, createDependencyExplorer} from './proof-guide.js';
+import {renderGroupWeb, renderDependencyLayers, createDependencyExplorer} from './proof-guide.js';
 import {createRepositoryExplorer} from './repository.js';
 import {createSourceTreemap} from './source-visuals.js';
+import {archivePath, leanPath} from './archive-paths.js';
 const $ = id => document.getElementById(id);
 const number = n => Number(n).toLocaleString('en-US');
-let manifest = [], lookup = new Map(), filtered = [], visible = 120;
+const filePageSize = 40;
+let manifest = [], lookup = new Map(), filtered = [], visible = filePageSize;
 let currentPath = '', currentText = '', downloadURL = '', loadId = 0;
 let matchOffsets = [], selectedMatch = -1, searchId = 0;
 const packs = new Map();
 const reader = $('plain-text');
-const searchDialog = $('archive-search');
+const entryView = document.body.dataset.view;
+const entryTitle = document.title;
+const themeButton = $('theme-button');
+const themeRoot = document.documentElement;
 let worker, archivePromise, statisticsPromise, siteDetailsPromise;
 let inputTimer;
-let dependencyExplorer, proofGuide;
+let dependencyExplorer;
 let repository, leanView, leanViewPromise;
 const recentFiles = [];
+
+function applyTheme(light) {
+  themeRoot.classList.toggle('light', light);
+  document.body.classList.toggle('light', light);
+  themeButton.setAttribute('aria-pressed', String(light));
+  themeButton.title = light ? 'Switch to dark mode' : 'Switch to light mode';
+}
+
+applyTheme(themeRoot.classList.contains('light'));
+themeButton.onclick = () => {
+  const light = !themeRoot.classList.contains('light');
+  applyTheme(light);
+  try {
+    localStorage.setItem('riemann-theme', light ? 'light' : 'dark');
+  } catch {}
+};
+window.addEventListener('pageshow', event => {
+  if (event.persisted) {
+    try {
+      applyTheme(localStorage.getItem('riemann-theme') === 'light');
+    } catch {}
+  }
+});
+
 window.MonacoEnvironment={getWorker:()=>new Worker(new URL('./assets/editor-worker.js',import.meta.url),{type:'module'})};
 function error(message) { $('error').textContent = message; $('error').hidden = false; }
 async function unpack(url) {
@@ -36,24 +65,30 @@ function loadArchive() {
   return archivePromise;
 }
 function navigate(path, line = null, find = '') {
-  if (searchDialog.open) searchDialog.close();
-  const params = new URLSearchParams({file: path});
+  const params = new URLSearchParams({file: leanPath(path)});
   if(line!==null)params.set('line',String(line));
   if (find) params.set('find', find);
-  const hash = '#' + params;
-  if (location.hash === hash) route(); else location.hash = hash;
+  navigateCode(params);
+}
+function navigateCode(params) {
+  const target = new URL('code.html', location.href);
+  target.hash = params;
+  if (location.pathname !== target.pathname) location.assign(target);
+  else if (location.hash === target.hash) route();
+  else location.hash = target.hash;
 }
 function renderFiles() {
   const fragment = document.createDocumentFragment();
   for (const id of filtered.slice(0, visible)) {
     const entry = manifest[id];
+    const path = leanPath(entry[0]);
     const button = document.createElement('button');
     button.className = 'result' + (entry[0] === currentPath ? ' active' : '');
     button.setAttribute('role', 'listitem');
     const title = document.createElement('strong');
-    title.textContent = entry[0].split('/').at(-1);
+    title.textContent = path.split('/').at(-1);
     const sub = document.createElement('small');
-    sub.textContent = entry[0].includes('/') ? entry[0].slice(0, entry[0].lastIndexOf('/')) : 'Entry point';
+    sub.textContent = path.includes('/') ? path.slice(0, path.lastIndexOf('/')) : 'Entry point';
     const detail = document.createElement('small');
     detail.textContent = `${number(entry[1])} lines`;
     button.append(title, sub, detail);
@@ -73,12 +108,12 @@ async function searchFiles() {
     return;
   }
   if (mode() !== 'files') return;
-  const query = $('search-input').value.trim().toLowerCase().replace(/\.lean$/, '.txt');
+  const query = leanPath($('search-input').value.trim().toLowerCase());
   filtered = [];
-  for (let id = 0; id < manifest.length; id++) if (manifest[id][0].toLowerCase().includes(query)) filtered.push(id);
+  for (let id = 0; id < manifest.length; id++) if (leanPath(manifest[id][0]).toLowerCase().includes(query)) filtered.push(id);
   // Keep the main statements easy to find in the initial list.
   if (!query) filtered.sort((a, b) => (manifest[a][0] === 'Main.txt' ? -1 : manifest[b][0] === 'Main.txt' ? 1 : manifest[a][0] === 'Statements.txt' ? -1 : manifest[b][0] === 'Statements.txt' ? 1 : 0));
-  visible = 120;
+  visible = filePageSize;
   renderFiles();
 }
 function stopSearch() {
@@ -120,8 +155,9 @@ function showSearchResults(event) {
     const fragment = document.createDocumentFragment();
     for (const item of data.items) {
       const button = document.createElement('button'); button.className = 'result'; button.setAttribute('role', 'listitem');
-      const title = document.createElement('strong'); title.textContent = `${item.path.split('/').at(-1)} · line ${item.line}`;
-      const path = document.createElement('small'); path.textContent = item.path;
+      const displayPath = leanPath(item.path);
+      const title = document.createElement('strong'); title.textContent = `${displayPath.split('/').at(-1)} · line ${item.line}`;
+      const path = document.createElement('small'); path.textContent = displayPath;
       const text = document.createElement('small'); text.className = 'snippet'; text.textContent = item.text;
       button.append(title, path, text); button.onclick = () => navigate(item.path, item.line, $('search-input').value.trim()); fragment.append(button);
     }
@@ -129,14 +165,16 @@ function showSearchResults(event) {
   }
   if (data.done) $('cancel-search').hidden = true;
 }
-$('more-results').onclick = () => { visible += 200; renderFiles(); };
-function openSearch() {
-  if (!searchDialog.open) searchDialog.showModal();
-  $('search-input').focus();
-  if (mode() === 'files') searchFiles();
+$('more-results').onclick = () => { visible += filePageSize; renderFiles(); };
+function openSearch(filter) {
+  if (document.body.dataset.view === 'search' && filter === undefined) {
+    $('search-input').focus();
+    return;
+  }
+  const target = new URL('search.html', location.href);
+  if (filter) target.searchParams.set('file', filter);
+  location.assign(target);
 }
-$('search-button').onclick = openSearch;
-$('close-search').onclick = () => searchDialog.close();
 async function loadText(entry) {
   const id = entry[2];
   if (!packs.has(id)) {
@@ -200,8 +238,8 @@ $('wrap-text').onchange = event => {
 };
 $('copy-link').onclick = async () => {
   try {
-    const url = new URL(location.href);
-    url.hash = new URLSearchParams({file: currentPath, line: $('line-input').value});
+    const url = new URL('code.html', location.href);
+    url.hash = new URLSearchParams({file: leanPath(currentPath), line: $('line-input').value});
     await navigator.clipboard.writeText(url.toString());
     $('copy-link').textContent = 'Copied'; setTimeout(() => $('copy-link').textContent = 'Copy link', 1500);
   } catch { error('Copy the address from your browser to share this file.'); }
@@ -218,6 +256,8 @@ function showView(view) {
   $('workspace-sidebar').hidden = !workspace;
   $('overview').hidden = view !== 'statistics';
   $('extras-page').hidden = view !== 'extras';
+  $('theorem-page').hidden = view !== 'theorem';
+  $('search-page').hidden = view !== 'search';
   $('dependencies').hidden = view !== 'dependencies';
   $('document').hidden = view !== 'code' || !currentPath;
   $('empty-reader').hidden = view !== 'code' || Boolean(currentPath);
@@ -225,6 +265,8 @@ function showView(view) {
     ['repository-button', workspace],
     ['overview-button', view === 'statistics'],
     ['extras-link', view === 'extras'],
+    ['theorem-link', view === 'theorem'],
+    ['search-button', view === 'search'],
   ]) {
     if (active) $(id).setAttribute('aria-current', 'page');
     else $(id).removeAttribute('aria-current');
@@ -236,32 +278,34 @@ async function route() {
   const hash = location.hash.slice(1);
   const params = new URLSearchParams(hash);
   const view = params.get('view');
-  const path = params.get('file') || (hash === 'code' ? currentPath || 'Main.txt' : '');
+  const file = archivePath(params.get('file') || '');
+  const legacyPage = ['code', 'extras', 'search', 'statistics', 'theorem'].includes(hash) ? hash : null;
+  const page = file || view === 'code' || view === 'dependencies' ? 'code' : legacyPage || entryView;
+  const path = file || (page === 'code' && !view ? currentPath || 'Main.txt' : '');
   $('error').hidden = true;
   try {
-    if (hash === 'extras') {
-      showView('extras');
-      document.title = 'Extras · Riemann Archive';
-      loadSiteDetails();
-      return;
-    }
-    if (hash === 'statistics') {
-      showView('statistics');
-      document.title = 'Statistics · Riemann Archive';
-      statisticsPromise ??= initializeStatistics();
-      await statisticsPromise;
-      if (token === loadId) redrawProofGuide();
-      return;
-    }
-    if (!path && view !== 'code' && view !== 'dependencies') {
-      showView('home');
-      document.title = 'Riemann Hypothesis';
+    if (page !== 'code') {
+      showView(page);
+      const fallbackTitles = {
+        home: 'Riemann Hypothesis', extras: 'Extras', search: 'Search the Lean archive',
+        statistics: 'Proof statistics', theorem: 'Riemann Hypothesis statement',
+      };
+      document.title = page === entryView ? entryTitle : fallbackTitles[page] + ' · Riemann Archive';
+      if (page === 'extras') loadSiteDetails();
+      if (page === 'search') {
+        $('search-input').focus({preventScroll: true});
+        if (mode() === 'files') await searchFiles();
+      }
+      if (page === 'statistics') {
+        statisticsPromise ??= initializeStatistics();
+        await statisticsPromise;
+      }
       return;
     }
 
     const dependencies = view === 'dependencies';
     showView(dependencies ? 'dependencies' : 'code');
-    document.title = dependencies ? 'Dependencies · Riemann Archive' : 'Code · Riemann Archive';
+    document.title = dependencies ? 'Dependencies · Riemann Archive' : entryView === 'code' ? entryTitle : 'Lean proof code · Riemann Archive';
     await loadArchive();
     if (token !== loadId) return;
     repository ??= createRepositoryExplorer(manifest, navigate);
@@ -283,7 +327,9 @@ async function route() {
     currentPath = path; currentText = text;
     $('empty-reader').hidden = true;
     $('document').hidden = false;
-    $('file-name').textContent = path.split('/').at(-1);
+    const displayPath = leanPath(path);
+    const fileName = displayPath.split('/').at(-1);
+    $('file-name').textContent = fileName;
     reader.value = text;
     renderBreadcrumbs(path);
     repository?.reveal(path);
@@ -294,8 +340,7 @@ async function route() {
     $('line-input').max = lineCount;
     if (downloadURL) URL.revokeObjectURL(downloadURL);
     downloadURL = URL.createObjectURL(new Blob([text], {type: 'text/plain;charset=utf-8'}));
-    $('download-text').href = downloadURL; $('download-text').download = path.split('/').at(-1);
-    $('download-lean').href = downloadURL; $('download-lean').download = path.split('/').at(-1).replace(/\.txt$/, '.lean');
+    $('download-lean').href = downloadURL; $('download-lean').download = fileName;
     $('find-input').value = params.get('find') || ''; findMatches(true);
     let restored=false;
     try{
@@ -307,11 +352,11 @@ async function route() {
       }
       leanView=await leanViewPromise;
       if(token!==loadId)return;
-      restored=leanView.open(path,text);leanView.setWrap($('wrap-text').checked);
+      restored=leanView.open(displayPath,text);leanView.setWrap($('wrap-text').checked);
       const lastOpened = recentFiles.indexOf(path);
       if (lastOpened !== -1) recentFiles.splice(lastOpened, 1);
       recentFiles.push(path);
-      if (recentFiles.length > 12) leanView.close(recentFiles.shift());
+      if (recentFiles.length > 12) leanView.close(leanPath(recentFiles.shift()));
       requestAnimationFrame(()=>leanView.layout());
     }catch(problem){
       if (token !== loadId) return;
@@ -322,89 +367,44 @@ async function route() {
     if(params.has('line')||!restored)requestAnimationFrame(() => {
       if (token === loadId) goToLine(params.get('line') || 1);
     });
-    document.title = `${path.split('/').at(-1)} · Riemann Archive`;
+    if (path !== 'Main.txt') document.title = `${fileName} · Riemann Archive`;
   } catch (problem) { if (token === loadId) error(problem.message); }
 }
 window.addEventListener('hashchange', route);
 function navigateDependencies(path = 'Main.txt') {
-  const hash = '#' + new URLSearchParams({view:'dependencies',file:path});
-  if (location.hash === hash) route(); else location.hash=hash;
+  navigateCode(new URLSearchParams({view:'dependencies',file:leanPath(path)}));
 }
 $('explore-dependencies').onclick = () => navigateDependencies(currentPath || 'Main.txt');
 $('file-dependencies').onclick = () => navigateDependencies(currentPath || 'Main.txt');
 function renderBreadcrumbs(path){
   const container=$('file-breadcrumbs');container.replaceChildren();
-  const parts=['text',...path.split('/')];
+  const parts=['text',...leanPath(path).split('/')];
   parts.forEach((part,i)=>{if(i){const separator=document.createElement('span');separator.className='breadcrumb-divider';separator.textContent='/';container.append(separator);}const label=document.createElement('span');label.textContent=part;container.append(label);});
 }
 document.querySelectorAll('[data-open]').forEach(button => button.onclick = () => navigate(button.dataset.open));
 document.addEventListener('keydown', event => {
   if ((event.ctrlKey || event.metaKey) && event.key === 'k') { event.preventDefault(); openSearch(); }
-  if ((event.ctrlKey || event.metaKey) && event.key === 'f' && !searchDialog.open && !$('document').hidden) { event.preventDefault(); $('find-input').focus(); }
+  if ((event.ctrlKey || event.metaKey) && event.key === 'f' && !$('document').hidden) { event.preventDefault(); $('find-input').focus(); }
 });
-async function refreshVerification(stats) {
-    try {
-      const response=await fetch('data/metrics.json', {cache:'no-store'});
-      if(response.ok){
-        const metrics=await response.json();
-        $('cpu-hours').textContent=Number(metrics.cpu_hours).toFixed(4);
-        const seconds=metrics.wall_seconds;
-        $('wall-time').textContent=seconds>=3600?(seconds/3600).toFixed(2)+' h':(seconds/60).toFixed(1)+' min';
-        $('build-memory').textContent=(metrics.peak_aggregate_rss_bytes_sampled/1024**3).toFixed(2)+' GiB';
-        $('timing-note').textContent=(metrics.status==='running'?'Compilation was still running at this snapshot. These are partial measurements, not a completed full-proof typecheck time. ':'The recorded verification attempt has ended; read its result above. ')+`CPU time is aggregate user + system time sampled for the verification process tree. Downloads and website generation are excluded. ${metrics.machine.logical_cpus} logical CPUs · ${metrics.machine.architecture}.`;
-        $('timing-snapshot').textContent='Measurement snapshot: '+metrics.updated_at;
-      }
-    } catch { /* Pending remains accurate until a metric is available. */ }
-    try {
-      const response = await fetch('data/verification.json', {cache:'no-store'});
-      if (response.ok) {
-        const status = await response.json();
-        $('verification-title').textContent = status.title;
-        $('verification-detail').textContent = status.detail;
-        $('verification-meta').textContent = `${stats.toolchain} · report time ${status.checked_at || 'not yet completed'}`;
-      }
-    } catch { /* The pending state remains visible if the report is unavailable. */ }
-}
-const statisticsTabs = [...document.querySelectorAll('.statistics-tabs [role="tab"]')];
+const statisticsSelector = $('statistics-card-select');
+const statisticsCards = Array.from(statisticsSelector.options, option => $(option.value));
 let statisticsIndex = 0;
-
-function redrawProofGuide() {
-  if (document.body.dataset.view === 'statistics' && !$('statistics-dependencies').hidden) {
-    requestAnimationFrame(() => proofGuide?.redraw());
-  }
-}
+$('statistics-position').textContent = `1 of ${statisticsCards.length}`;
 
 function selectStatistics(index) {
-  if (index < 0 || index >= statisticsTabs.length || index === statisticsIndex) return;
-  const currentTab = statisticsTabs[statisticsIndex];
-  const nextTab = statisticsTabs[index];
-  const panel = $(nextTab.getAttribute('aria-controls'));
-  $(currentTab.getAttribute('aria-controls')).hidden = true;
-  currentTab.setAttribute('aria-selected', 'false');
-  currentTab.tabIndex = -1;
-  nextTab.setAttribute('aria-selected', 'true');
-  nextTab.tabIndex = 0;
-  panel.dataset.direction = index < statisticsIndex ? 'previous' : 'next';
-  panel.hidden = false;
+  const card = statisticsCards[index];
+  if (!card || index === statisticsIndex) return;
+  statisticsCards[statisticsIndex].hidden = true;
+  card.dataset.direction = index < statisticsIndex ? 'previous' : 'next';
+  card.hidden = false;
   statisticsIndex = index;
+  statisticsSelector.selectedIndex = index;
+  $('statistics-position').textContent = `${index + 1} of ${statisticsCards.length}`;
   $('statistics-previous').disabled = index === 0;
-  $('statistics-next').disabled = index === statisticsTabs.length - 1;
-  nextTab.scrollIntoView({block: 'nearest', inline: 'nearest'});
-  redrawProofGuide();
+  $('statistics-next').disabled = index === statisticsCards.length - 1;
 }
 
-statisticsTabs.forEach((tab, index) => {
-  tab.onclick = () => selectStatistics(index);
-  tab.onkeydown = event => {
-    const targets = {ArrowLeft: index - 1, ArrowRight: index + 1, Home: 0, End: statisticsTabs.length - 1};
-    const target = targets[event.key];
-    if (target === undefined) return;
-    event.preventDefault();
-    if (!statisticsTabs[target]) return;
-    selectStatistics(target);
-    statisticsTabs[target].focus();
-  };
-});
+statisticsSelector.onchange = () => selectStatistics(statisticsSelector.selectedIndex);
 $('statistics-previous').onclick = () => selectStatistics(statisticsIndex - 1);
 $('statistics-next').onclick = () => selectStatistics(statisticsIndex + 1);
 
@@ -435,39 +435,30 @@ function loadSiteDetails() {
 
 async function initializeStatistics() {
     const [stats, summary] = await Promise.all([readReport('stats'), readReport('dependencies'), loadArchive()]);
-    loadSiteDetails();
-    proofGuide = initializeProofGuide(navigate);
     $('stat-lines').textContent = number(stats.lines); $('stat-files').textContent = number(stats.files); $('stat-nonblank').textContent = number(stats.nonblank_lines);
-    for (const [name, group] of Object.entries(stats.groups)) {
-      const row = document.createElement('div'); row.className = 'group';
-      const label = document.createElement('span'); label.textContent = name;
-      const count = document.createElement('span'); count.textContent = `${number(group.files)} files · ${number(group.lines)} lines`;
-      row.append(label, count); $('groups').append(row);
-    }
+    $('stat-bytes').textContent = `${(stats.bytes / 1_000_000_000).toFixed(3)} GB`;
     const counts = stats.declaration_counts_textual;
-    const extra = [
-      [number(counts.theorem || 0), 'theorem declarations'],
-      [number(counts.lemma || 0), 'lemma declarations'],
-      [number((counts.theorem || 0) + (counts.lemma || 0)), 'theorems + lemmas'],
-      [number(counts.def || 0), 'def declarations'],
-      [number((counts.structure || 0) + (counts.class || 0)), 'structures + classes'],
-      [number(counts.instance || 0), 'instance declarations'],
-      [number(summary.internal_import_edges), 'project import edges'],
-      [number(summary.main_import_closure_files), 'files reachable from Main'],
-      [(stats.bytes / 1_000_000_000).toFixed(3) + ' GB', 'uncompressed source text']
+    const declarations = [
+      ['Theorems', counts.theorem],
+      ['Lemmas', counts.lemma],
+      ['Definitions', counts.def],
+      ['Structures', counts.structure],
+      ['Classes', counts.class],
+      ['Instances', counts.instance],
     ];
-    for (const [value,label] of extra) { const card=document.createElement('div'); const strong=document.createElement('strong');strong.textContent=value; const span=document.createElement('span');span.textContent=label;card.append(strong,span);$('extra-stats').append(card); }
-    const note=document.createElement('p');note.className='count-note';note.textContent='Declaration counts are textual source counts. They are not a count of declarations successfully checked by Lean.';$('extra-stats').after(note);
-    renderGroupWeb(summary, stats, group => {
-      document.querySelector('input[value=files]').checked = true;
-      stopSearch();
-      $('search-input').value = group;
-      openSearch();
-    });
+    for (const [label, count] of declarations) {
+      const metric = document.createElement('div');
+      const name = document.createElement('dt');
+      const value = document.createElement('dd');
+      name.textContent = label;
+      value.textContent = number(count ?? 0);
+      metric.append(name, value);
+      $('declaration-stats').append(metric);
+    }
+    renderGroupWeb(summary, stats, openSearch);
     renderDependencyLayers(summary,navigate);
-    $('dependency-summary').textContent=`${number(summary.nodes)} project modules · ${number(summary.internal_import_edges)} internal import edges · ${number(summary.main_import_cycles_detected)} import cycles detected in Main’s closure. All source files are reachable from Main.`;
-    refreshVerification(stats);
-    setInterval(() => refreshVerification(stats), 10000);
+    $('dependency-summary').textContent = `${number(summary.internal_import_edges)} imports across ${number(summary.nodes)} modules · ${number(summary.main_import_closure_files)} reachable from Main.lean · ${number(summary.main_import_cycles_detected)} cycles detected`;
     createSourceTreemap(manifest,summary,navigate);
 }
+if (entryView === 'search') $('search-input').value = new URLSearchParams(location.search).get('file') || '';
 route();

@@ -1,4 +1,6 @@
 const canvas = document.getElementById('zeta-spiral');
+const landing = document.getElementById('landing');
+const themeRoot = document.documentElement;
 const context = canvas.getContext('2d');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const limit = 34;
@@ -64,9 +66,10 @@ if (context) {
     const scale = Math.min(width * .86 / (right - left), height * .83 / (top - bottom));
     const centerX = width / 2 - (left + right) * scale / 2;
     const centerY = height / 2 + (bottom + top) * scale / 2;
+    const light = themeRoot.classList.contains('light');
 
     context.lineWidth = 1;
-    context.strokeStyle = '#a3b0b631';
+    context.strokeStyle = light ? '#657d825a' : '#a3b0b631';
     context.setLineDash([2, 6]);
     context.beginPath();
     context.moveTo(.05 * width, centerY + .5);
@@ -88,7 +91,7 @@ if (context) {
     context.lineJoin = 'round';
     context.lineCap = 'round';
     context.lineWidth = 1.7;
-    context.strokeStyle = '#c4d5d5';
+    context.strokeStyle = light ? '#456469' : '#c4d5d5';
     context.stroke();
 
     if (progress < 1) frame = requestAnimationFrame(draw);
@@ -96,9 +99,19 @@ if (context) {
 
   function scheduleDraw() {
     cancelAnimationFrame(frame);
-    frame = requestAnimationFrame(draw);
+    if (!landing.hidden) frame = requestAnimationFrame(draw);
+  }
+
+  function restart() {
+    startedAt = undefined;
+    scheduleDraw();
   }
 
   new ResizeObserver(scheduleDraw).observe(canvas);
+  new MutationObserver(restart).observe(landing, {attributes: true, attributeFilter: ['hidden']});
+  new MutationObserver(scheduleDraw).observe(themeRoot, {attributes: true, attributeFilter: ['class']});
+  window.addEventListener('pageshow', event => {
+    if (event.persisted && !landing.hidden) restart();
+  });
   reducedMotion.addEventListener('change', scheduleDraw);
 }
