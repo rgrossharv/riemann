@@ -96,8 +96,12 @@ def stats_cli():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('source',help='Extracted lean/, text/, or a downloaded .tar.gz source archive')
     parser.add_argument('--output',default='proof-statistics.json')
-    args=parser.parse_args();value=analyze(args.source)
-    Path(args.output).write_text(json.dumps(value,indent=2)+'\n')
+    args=parser.parse_args()
+    try:
+        value=analyze(Path(args.source).expanduser())
+        Path(args.output).expanduser().write_text(json.dumps(value,indent=2)+'\n',encoding='utf-8')
+    except (OSError, ValueError, tarfile.TarError) as error:
+        parser.exit(1,f'Could not compute statistics: {error}\n')
     print(json.dumps({k:value[k] for k in ('files','lines','nonblank_lines','bytes','source_tree_sha256','declaration_counts_textual','internal_import_edges')},indent=2))
     print('Full report:',args.output)
 

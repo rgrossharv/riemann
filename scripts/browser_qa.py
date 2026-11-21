@@ -92,7 +92,9 @@ def main():
             client.command('WebDriver:SetWindowRect', {'width': 1440, 'height': 1080})
             url = f'http://127.0.0.1:{server.server_port}/'
             client.command('WebDriver:Navigate', {'url': url})
-            client.until('document.getElementById("result-count").textContent.includes("175,187")')
+            assert client.js('return document.getElementById("landing-title").textContent') == 'Riemann Hypothesis'
+            client.click('.landing-actions a[href="#statistics"]')
+            client.until('document.getElementById("stat-files").textContent === "175,187"')
             client.js('window.__qaErrors=[];window.addEventListener("error",event=>window.__qaErrors.push(event.message));window.addEventListener("unhandledrejection",event=>window.__qaErrors.push(String(event.reason)));return true')
             assert client.js('return document.getElementById("stat-lines").textContent') == '17,374,215'
             assert client.js('return document.querySelector(".exact-statement").textContent.includes("theorem riemannHypothesis : RiemannHypothesis := rhOfAll")')
@@ -106,19 +108,26 @@ def main():
             assert client.js('const shapes=Array.from(document.querySelectorAll(".treemap-data"));return shapes.reduce((sum,node)=>sum+Number(node.dataset.lines),0)') == 17374215
             assert client.js('const shapes=Array.from(document.querySelectorAll(".treemap-data"));const ratios=shapes.map(node=>Number(node.getAttribute("width"))*Number(node.getAttribute("height"))/Number(node.dataset.lines));return Math.max(...ratios)-Math.min(...ratios)<1e-10')
             assert client.js('const shapes=Array.from(document.querySelectorAll(".profile-data"));const ratios=shapes.map(node=>Number(node.getAttribute("height"))/Number(node.dataset.lines));return Math.max(...ratios)-Math.min(...ratios)<1e-10')
+            client.click('#statistics-next')
+            assert client.js('return !document.getElementById("statistics-layout").hidden')
+            client.click('#statistics-previous')
+            assert client.js('return !document.getElementById("statistics-size").hidden')
+            client.click('#statistics-layout-tab')
             client.click('.treemap-data[data-path="Development"]')
             assert client.js('return document.getElementById("treemap-location").textContent') == 'text/Development/'
             assert client.js('return Array.from(document.querySelectorAll(".treemap-data")).reduce((sum,node)=>sum+Number(node.dataset.lines),0)') == 12232663
             client.click('#treemap-reset')
+            client.click('#statistics-dependencies-tab')
             assert client.js('return document.querySelectorAll(".proof-stage").length') == 10
             client.click('[data-stage="reflection"]')
             assert 'rh_of_every' in client.js('return document.getElementById("proof-detail-theorem").textContent')
             screenshot = client.command('WebDriver:TakeScreenshot', {'id': None, 'full': False})['value']
             (ROOT / 'reports/browser-proof.png').write_bytes(base64.b64decode(screenshot))
+            client.click('#statistics-layout-tab')
             client.js('document.getElementById("source-treemap").scrollIntoView({block:"start"}); return true')
             screenshot = client.command('WebDriver:TakeScreenshot', {'id': None, 'full': False})['value']
             (ROOT / 'reports/browser-treemap.png').write_bytes(base64.b64decode(screenshot))
-            client.js('document.querySelector("[data-open=\\"Main.txt\\"]").click(); return true')
+            client.js('document.getElementById("repository-button").click(); return true')
             client.until('document.getElementById("plain-text").value.includes("theorem riemannHypothesis")')
             assert client.js('return document.getElementById("plain-text").readOnly')
             client.until('window.wrappedJSObject.riemannReader && window.wrappedJSObject.riemannReader.getValue().includes("theorem riemannHypothesis")', timeout=60)
@@ -140,14 +149,13 @@ def main():
             client.until('!document.getElementById("explorer-panel").hidden')
             client.js('document.querySelector(".tree-item[data-path=\\"Statements.txt\\"]").click(); return true')
             client.until('window.wrappedJSObject.riemannReader.getValue().includes("def RiemannZetaZerosOnLine")')
-            assert client.js('return document.querySelectorAll(".file-tab").length') == 2
-            client.js('Array.from(document.querySelectorAll(".file-tab [role=tab]")).find(button=>button.textContent==="Main.txt").click(); return true')
+            client.js('document.querySelector(".tree-item[data-path=\\"Main.txt\\"]").click(); return true')
             client.until('window.wrappedJSObject.riemannReader.getValue().includes("theorem riemannHypothesis")')
             largest=json.loads((ROOT / 'reports/stats.json').read_text())['largest_files'][0]
             client.js('location.hash = new URLSearchParams({file:'+json.dumps(largest['path'])+',line:'+str(largest['lines'])+'}).toString(); return true')
             client.until('document.getElementById("file-name").textContent==='+json.dumps(largest['path'].split('/')[-1])+' && window.wrappedJSObject.riemannReader.getPosition()?.lineNumber === '+str(largest['lines']),timeout=60)
             assert client.js('return window.wrappedJSObject.riemannReader.isReadOnly()')
-            client.js('Array.from(document.querySelectorAll(".file-tab [role=tab]")).find(button=>button.textContent==="Main.txt").click(); return true')
+            client.js('document.querySelector(".tree-item[data-path=\\"Main.txt\\"]").click(); return true')
             client.until('window.wrappedJSObject.riemannReader.getValue().includes("theorem riemannHypothesis")')
             screenshot = client.command('WebDriver:TakeScreenshot', {'id': None, 'full': False})['value']
             (ROOT / 'reports/browser-repository.png').write_bytes(base64.b64decode(screenshot))
@@ -155,13 +163,18 @@ def main():
             client.js('const r=document.querySelector("input[value=text]"); r.checked=true; r.dispatchEvent(new Event("change")); document.getElementById("search-input").value="riemannHypothesis"; document.getElementById("search-form").requestSubmit(); return true')
             client.until('document.getElementById("cancel-search").hidden && document.getElementById("results").children.length > 0', timeout=60)
             assert client.js('return document.getElementById("results").textContent.includes("Main.txt")')
+            client.js('document.getElementById("close-search").click(); return true')
             client.js('document.getElementById("file-dependencies").click(); return true')
             client.until('document.getElementById("dependency-counts").textContent.includes("2 direct project imports")')
             assert client.js('return document.getElementById("imports-list").textContent.includes("Statements.txt")')
-            print('PASS: desktop loading, statistics, exact layer-line totals, proportional bar widths and group-circle areas, interactive proof map, colored Lean editor, native typing blocked, repository tree, file tabs, find/next, line navigation, indexed full-text search, module dependency web', flush=True)
-            client.js('document.getElementById("overview-button").click(); return true')
+            print('PASS: landing navigation, statistics panels, exact layer-line totals, proportional bar widths and group-circle areas, interactive proof map, colored Lean editor, native typing blocked, repository tree, find/next, line navigation, indexed full-text search, module dependency web', flush=True)
+            client.js('location.hash = ""; return true')
+            client.until('!document.getElementById("landing").hidden')
             screenshot = client.command('WebDriver:TakeScreenshot', {'id': None, 'full': False})['value']
             (ROOT / 'reports/browser-desktop.png').write_bytes(base64.b64decode(screenshot))
+            client.js('location.hash = "statistics"; return true')
+            client.until('!document.getElementById("overview").hidden')
+            client.click('#statistics-dependencies-tab')
             client.js('document.getElementById("layers-title").scrollIntoView({block:"start"}); return true')
             screenshot = client.command('WebDriver:TakeScreenshot', {'id': None, 'full': False})['value']
             (ROOT / 'reports/browser-layers.png').write_bytes(base64.b64decode(screenshot))

@@ -11,7 +11,7 @@ licenses are retained. The original announcement is https://alpo.ge/remark.pdf.
 
 INDEPENDENT CHECKING
 --------------------
-Download verify_proof.py from the website and run:
+Download verify_proof.py from the website's Extras page and run:
 
   python3 verify_proof.py
 
@@ -24,7 +24,8 @@ Main with all imported proof dependencies. It then prints the five theorem
 types and their axioms, rejects sorryAx, reconfirms source identity, and writes
 results/certificate.json with hashed logs and measured CPU/wall time.
 
-Use an archive already downloaded from the website:
+The checker looks for lean-sources.tar.gz in your current folder or beside
+the script. Use --archive to select a specific download:
 
   python3 verify_proof.py --archive lean-sources.tar.gz
 
@@ -46,7 +47,7 @@ is claimed. Publishing the website does not mark the proof as verified.
 
 RECOMPUTE THE STATISTICS
 ------------------------
-Download proof_stats.py and a Lean or TXT source archive, then run:
+Download proof_stats.py and a Lean or TXT source archive from Extras, then run:
 
   python3 proof_stats.py lean-sources.tar.gz --output statistics.json
 
@@ -96,7 +97,7 @@ dist/downloads/             Full .lean and .txt archives and standalone Python t
 reports/                    Statistics, compilation results, and explicit snapshots
 
 Individual files can be browsed with Lean syntax colors, line numbers, find,
-folding, tabs, and an expandable repository tree. File downloads preserve the
+folding, and an expandable repository tree. File downloads preserve the
 original bytes. Public visitors have no editing/upload/write endpoint.
 
 The proof map links logical steps to exact declarations. The quantitative

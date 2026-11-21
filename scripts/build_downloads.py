@@ -20,10 +20,7 @@ def add_file(archive,name,data):
     archive.addfile(info,io.BytesIO(data))
 
 
-def main():
-    parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--tools-only',action='store_true',help='Refresh the small tools and metadata using existing archives')
-    args=parser.parse_args()
+def write_tools():
     OUT.mkdir(parents=True,exist_ok=True)
     stats_source=(ROOT/'tools/proof_stats.py').read_text()
     tree=ast.parse(stats_source)
@@ -35,6 +32,13 @@ def main():
     shutil.copyfile(ROOT/'tools/proof_stats.py',OUT/'proof_stats.py')
     shutil.copyfile(ROOT/'tools/proof_manifest.json',OUT/'proof_manifest.json')
     shutil.copyfile(ROOT/'scripts/publish_github.sh',OUT/'publish_github.sh')
+
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--tools-only',action='store_true',help='Refresh the small tools and metadata using existing archives')
+    args=parser.parse_args()
+    write_tools()
     lean_out=OUT/'lean-sources.tar.gz';txt_out=OUT/'txt-sources.tar.gz'
     original=ROOT/'lean.tar.gz'
     if args.tools_only:

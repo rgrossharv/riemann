@@ -26,15 +26,15 @@ export function createRepositoryExplorer(manifest, openFile) {
   function item(node,depth){
     const wrapper=document.createElement('div');wrapper.className='tree-entry';
     const button=document.createElement('button');button.className='tree-item '+(node.directory?'tree-folder':'tree-file');button.setAttribute('role','treeitem');button.setAttribute('aria-level',depth+1);button.title=node.path;button.style.paddingLeft=(8+depth*13)+'px';button.dataset.path=node.path;
-    const icon=document.createElement('span');icon.className=node.directory?'folder-icon':'file-icon';icon.textContent=node.directory?'+':'T';icon.setAttribute('aria-hidden','true');
+    const icon=document.createElement('span');icon.className=node.directory?'folder-icon':'file-icon';icon.textContent=node.directory?'›':'λ';icon.setAttribute('aria-hidden','true');
     const label=document.createElement('span');label.className='tree-name';label.textContent=node.name;
     button.append(icon,label);
     node.button=button;wrapper.append(button);
     if(node.directory){
       const group=document.createElement('div');group.setAttribute('role','group');group.hidden=true;wrapper.append(group);button.setAttribute('aria-expanded','false');
       const count=document.createElement('small');count.textContent=node.count.toLocaleString('en-US');button.append(count);
-      node.expand=()=>{if(!node.rendered){children(node,group,depth+1);node.rendered=true;}group.hidden=false;button.setAttribute('aria-expanded','true');icon.textContent='−';};
-      node.collapse=()=>{group.hidden=true;button.setAttribute('aria-expanded','false');icon.textContent='+';};
+      node.expand=()=>{if(!node.rendered){children(node,group,depth+1);node.rendered=true;}group.hidden=false;button.setAttribute('aria-expanded','true');};
+      node.collapse=()=>{group.hidden=true;button.setAttribute('aria-expanded','false');};
       button.onclick=()=>group.hidden?node.expand():node.collapse();
     }else button.onclick=()=>openFile(node.path);
     button.onkeydown=event=>{
@@ -54,8 +54,17 @@ export function createRepositoryExplorer(manifest, openFile) {
         if(!node)return;
         if(node.directory)node.expand();
       }
-      tree.querySelector('.tree-item.selected')?.classList.remove('selected');
-      if(node.button){node.button.classList.add('selected');node.button.setAttribute('aria-selected','true');if(!document.getElementById('explorer-panel').hidden)node.button.scrollIntoView({block:'nearest'});}
+      const previous = tree.querySelector('.tree-item.selected');
+      previous?.classList.remove('selected');
+      previous?.removeAttribute('aria-selected');
+      if (node.button) {
+        node.button.classList.add('selected');
+        node.button.setAttribute('aria-selected', 'true');
+        const row = node.button.getBoundingClientRect();
+        const viewport = tree.getBoundingClientRect();
+        if (row.top < viewport.top) tree.scrollTop += row.top - viewport.top;
+        else if (row.bottom > viewport.bottom) tree.scrollTop += row.bottom - viewport.bottom;
+      }
     }
   };
 }

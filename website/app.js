@@ -7,19 +7,14 @@ let manifest = [], lookup = new Map(), filtered = [], visible = 120;
 let currentPath = '', currentText = '', downloadURL = '', loadId = 0;
 let matchOffsets = [], selectedMatch = -1, searchId = 0;
 const packs = new Map();
-const worker = new Worker('search-worker.js');
 const reader = $('plain-text');
+const searchDialog = $('archive-search');
+let worker, archivePromise, statisticsPromise, siteDetailsPromise;
 let inputTimer;
 let dependencyExplorer, proofGuide;
 let repository, leanView, leanViewPromise;
-const openTabs=[];
+const recentFiles = [];
 window.MonacoEnvironment={getWorker:()=>new Worker(new URL('./assets/editor-worker.js',import.meta.url),{type:'module'})};
-const storedTheme = localStorage.getItem('riemann-theme');
-if (storedTheme === 'light') document.body.classList.add('light');
-$('theme-button').onclick = () => {
-  document.body.classList.toggle('light');
-  localStorage.setItem('riemann-theme', document.body.classList.contains('light') ? 'light' : 'dark');
-};
 function error(message) { $('error').textContent = message; $('error').hidden = false; }
 async function unpack(url) {
   const response = await fetch(url);
@@ -29,7 +24,19 @@ async function unpack(url) {
   const stream = bytes[0] === 31 && bytes[1] === 139 ? blob.stream().pipeThrough(new DecompressionStream('gzip')) : blob.stream();
   return JSON.parse(await new Response(stream).text());
 }
+function loadArchive() {
+  archivePromise ??= unpack('data/manifest.json.gz').then(entries => {
+    manifest = entries;
+    lookup = new Map(entries.map(entry => [entry[0], entry]));
+    $('archive-size').textContent = `${number(entries.length)} files`;
+  }).catch(problem => {
+    archivePromise = undefined;
+    throw problem;
+  });
+  return archivePromise;
+}
 function navigate(path, line = null, find = '') {
+  if (searchDialog.open) searchDialog.close();
   const params = new URLSearchParams({file: path});
   if(line!==null)params.set('line',String(line));
   if (find) params.set('find', find);
@@ -58,7 +65,14 @@ function renderFiles() {
   $('more-results').hidden = filtered.length <= visible;
 }
 function mode() { return document.querySelector('input[name=mode]:checked').value; }
-function searchFiles() {
+async function searchFiles() {
+  try {
+    await loadArchive();
+  } catch (problem) {
+    $('result-count').textContent = problem.message;
+    return;
+  }
+  if (mode() !== 'files') return;
   const query = $('search-input').value.trim().toLowerCase().replace(/\.lean$/, '.txt');
   filtered = [];
   for (let id = 0; id < manifest.length; id++) if (manifest[id][0].toLowerCase().includes(query)) filtered.push(id);
@@ -68,7 +82,7 @@ function searchFiles() {
   renderFiles();
 }
 function stopSearch() {
-  worker.postMessage({type: 'cancel'});
+  worker?.postMessage({type: 'cancel'});
   searchId++;
   $('cancel-search').hidden = true;
 }
@@ -91,12 +105,16 @@ $('search-form').onsubmit = event => {
   $('more-results').hidden = true;
   $('cancel-search').hidden = false;
   $('result-count').textContent = 'Searching…';
+  if (!worker) {
+    worker = new Worker('search-worker.js');
+    worker.onmessage = showSearchResults;
+  }
   worker.postMessage({type: 'search', id: ++searchId, query});
 };
-worker.onmessage = event => {
+function showSearchResults(event) {
   const data = event.data;
   if (data.id !== searchId) return;
-  if (data.type === 'error') { $('cancel-search').hidden = true; error(data.message); $('result-count').textContent = 'Search failed. Please retry.'; return; }
+  if (data.type === 'error') { $('cancel-search').hidden = true; $('result-count').textContent = data.message; return; }
   $('result-count').textContent = `${data.items?.length || 0}${data.truncated ? '+' : ''} matches · ${number(data.scanned)} / ${number(data.total)} files${data.done ? '' : ' searched'}`;
   if (data.items) {
     const fragment = document.createDocumentFragment();
@@ -110,8 +128,15 @@ worker.onmessage = event => {
     $('results').replaceChildren(fragment);
   }
   if (data.done) $('cancel-search').hidden = true;
-};
+}
 $('more-results').onclick = () => { visible += 200; renderFiles(); };
+function openSearch() {
+  if (!searchDialog.open) searchDialog.showModal();
+  $('search-input').focus();
+  if (mode() === 'files') searchFiles();
+}
+$('search-button').onclick = openSearch;
+$('close-search').onclick = () => searchDialog.close();
 async function loadText(entry) {
   const id = entry[2];
   if (!packs.has(id)) {
@@ -181,29 +206,85 @@ $('copy-link').onclick = async () => {
     $('copy-link').textContent = 'Copied'; setTimeout(() => $('copy-link').textContent = 'Copy link', 1500);
   } catch { error('Copy the address from your browser to share this file.'); }
 };
-async function route() {
-  if (!manifest.length) return;
-  const token = ++loadId;
-  const params = new URLSearchParams(location.hash.slice(1));
-  const path = params.get('file');
-  if (params.get('view') === 'dependencies') {
-    $('overview').hidden = true; $('document').hidden = true; $('dependencies').hidden = false;
-    try { await dependencyExplorer.show(path || 'Main.txt'); } catch (problem) { error(problem.message); }
-    return;
+function showView(view) {
+  const workspace = view === 'code' || view === 'dependencies';
+  if (document.body.dataset.view !== view) {
+    document.body.dataset.view = view;
+    $('reading-pane').scrollTop = 0;
+    window.scrollTo(0, 0);
   }
-  $('dependencies').hidden = true;
-  if (!path) { $('overview').hidden = false; $('document').hidden = true; document.title='Riemann · Text archive'; requestAnimationFrame(()=>proofGuide?.redraw()); return; }
-  const entry = lookup.get(path);
-  if (!entry) { error('This file is not in the archive.'); return; }
+  $('landing').hidden = view !== 'home';
+  $('reading-pane').hidden = view === 'home';
+  $('workspace-sidebar').hidden = !workspace;
+  $('overview').hidden = view !== 'statistics';
+  $('extras-page').hidden = view !== 'extras';
+  $('dependencies').hidden = view !== 'dependencies';
+  $('document').hidden = view !== 'code' || !currentPath;
+  $('empty-reader').hidden = view !== 'code' || Boolean(currentPath);
+  for (const [id, active] of [
+    ['repository-button', workspace],
+    ['overview-button', view === 'statistics'],
+    ['extras-link', view === 'extras'],
+  ]) {
+    if (active) $(id).setAttribute('aria-current', 'page');
+    else $(id).removeAttribute('aria-current');
+  }
+}
+
+async function route() {
+  const token = ++loadId;
+  const hash = location.hash.slice(1);
+  const params = new URLSearchParams(hash);
+  const view = params.get('view');
+  const path = params.get('file') || (hash === 'code' ? currentPath || 'Main.txt' : '');
+  $('error').hidden = true;
   try {
-    $('error').hidden = true;
+    if (hash === 'extras') {
+      showView('extras');
+      document.title = 'Extras · Riemann Archive';
+      loadSiteDetails();
+      return;
+    }
+    if (hash === 'statistics') {
+      showView('statistics');
+      document.title = 'Statistics · Riemann Archive';
+      statisticsPromise ??= initializeStatistics();
+      await statisticsPromise;
+      if (token === loadId) redrawProofGuide();
+      return;
+    }
+    if (!path && view !== 'code' && view !== 'dependencies') {
+      showView('home');
+      document.title = 'Riemann Hypothesis';
+      return;
+    }
+
+    const dependencies = view === 'dependencies';
+    showView(dependencies ? 'dependencies' : 'code');
+    document.title = dependencies ? 'Dependencies · Riemann Archive' : 'Code · Riemann Archive';
+    await loadArchive();
+    if (token !== loadId) return;
+    repository ??= createRepositoryExplorer(manifest, navigate);
+    if (dependencies) {
+      dependencyExplorer ??= createDependencyExplorer(manifest, unpack, navigate, navigateDependencies);
+      await dependencyExplorer.show(path || 'Main.txt');
+      return;
+    }
+    if (!path) {
+      $('document').hidden = true;
+      $('empty-reader').hidden = false;
+      return;
+    }
+    const entry = lookup.get(path);
+    if (!entry) throw new Error('This file is not in the archive.');
+
     const text = await loadText(entry);
     if (token !== loadId) return;
     currentPath = path; currentText = text;
-    $('overview').hidden = true; $('document').hidden = false;
-    $('file-name').textContent = path.split('/').at(-1); $('file-path').textContent = path;
+    $('empty-reader').hidden = true;
+    $('document').hidden = false;
+    $('file-name').textContent = path.split('/').at(-1);
     reader.value = text;
-    openTab(path);
     renderBreadcrumbs(path);
     repository?.reveal(path);
     const lineCount = text.split('\n').length;
@@ -227,44 +308,30 @@ async function route() {
       leanView=await leanViewPromise;
       if(token!==loadId)return;
       restored=leanView.open(path,text);leanView.setWrap($('wrap-text').checked);
+      const lastOpened = recentFiles.indexOf(path);
+      if (lastOpened !== -1) recentFiles.splice(lastOpened, 1);
+      recentFiles.push(path);
+      if (recentFiles.length > 12) leanView.close(recentFiles.shift());
       requestAnimationFrame(()=>leanView.layout());
-    }catch(problem){$('lean-editor').hidden=true;$('text-surface').classList.remove('editor-ready');error('Syntax reader could not load: '+problem.message);}
-    if(params.has('line')||!restored)requestAnimationFrame(() => goToLine(params.get('line') || 1));
-    if (mode() === 'files') renderFiles();
-    document.title = `${path.split('/').at(-1)} · Riemann text archive`;
-  } catch (problem) { error(problem.message); }
+    }catch(problem){
+      if (token !== loadId) return;
+      $('lean-editor').hidden=true;
+      $('text-surface').classList.remove('editor-ready');
+      error('Syntax reader could not load: '+problem.message);
+    }
+    if(params.has('line')||!restored)requestAnimationFrame(() => {
+      if (token === loadId) goToLine(params.get('line') || 1);
+    });
+    document.title = `${path.split('/').at(-1)} · Riemann Archive`;
+  } catch (problem) { if (token === loadId) error(problem.message); }
 }
 window.addEventListener('hashchange', route);
-$('overview-button').onclick = () => { location.hash = ''; route(); };
 function navigateDependencies(path = 'Main.txt') {
   const hash = '#' + new URLSearchParams({view:'dependencies',file:path});
   if (location.hash === hash) route(); else location.hash=hash;
 }
-$('dependencies-button').onclick = $('explore-dependencies').onclick = () => navigateDependencies(currentPath || 'Main.txt');
+$('explore-dependencies').onclick = () => navigateDependencies(currentPath || 'Main.txt');
 $('file-dependencies').onclick = () => navigateDependencies(currentPath || 'Main.txt');
-$('repository-button').onclick=()=>{setSidebar('explorer');navigate(currentPath||'Main.txt');};
-function setSidebar(view){
-  const explorer=view==='explorer';
-  $('explorer-panel').hidden=!explorer;$('search-panel').hidden=explorer;
-  $('explorer-button').classList.toggle('selected',explorer);$('search-button').classList.toggle('selected',!explorer);
-  $('explorer-button').setAttribute('aria-selected',explorer);$('search-button').setAttribute('aria-selected',!explorer);
-  if(explorer&&currentPath)repository?.reveal(currentPath);
-}
-$('explorer-button').onclick=()=>setSidebar('explorer');
-$('search-button').onclick=()=>{setSidebar('search');$('search-input').focus();};
-function openTab(path){
-  if(!openTabs.includes(path)){openTabs.push(path);if(openTabs.length>12){const removed=openTabs.shift();leanView?.close(removed);}}
-  renderTabs();
-}
-function renderTabs(){
-  const tabs=$('file-tabs');tabs.replaceChildren();
-  for(const path of openTabs){
-    const tab=document.createElement('div');tab.className='file-tab'+(path===currentPath?' selected':'');
-    const button=document.createElement('button');button.setAttribute('role','tab');button.setAttribute('aria-selected',path===currentPath);button.textContent=path.split('/').at(-1);button.title=path;button.onclick=()=>navigate(path);
-    const close=document.createElement('button');close.className='close-tab';close.textContent='×';close.setAttribute('aria-label','Close '+path.split('/').at(-1));close.onclick=()=>{const index=openTabs.indexOf(path);openTabs.splice(index,1);leanView?.close(path);if(path===currentPath){if(openTabs.length)navigate(openTabs[Math.min(index,openTabs.length-1)]);else{location.hash='';route();}}renderTabs();};
-    tab.append(button,close);tabs.append(tab);
-  }
-}
 function renderBreadcrumbs(path){
   const container=$('file-breadcrumbs');container.replaceChildren();
   const parts=['text',...path.split('/')];
@@ -272,8 +339,8 @@ function renderBreadcrumbs(path){
 }
 document.querySelectorAll('[data-open]').forEach(button => button.onclick = () => navigate(button.dataset.open));
 document.addEventListener('keydown', event => {
-  if ((event.ctrlKey || event.metaKey) && event.key === 'k') { event.preventDefault(); $('search-input').focus(); }
-  if ((event.ctrlKey || event.metaKey) && event.key === 'f' && !$('document').hidden) { event.preventDefault(); $('find-input').focus(); }
+  if ((event.ctrlKey || event.metaKey) && event.key === 'k') { event.preventDefault(); openSearch(); }
+  if ((event.ctrlKey || event.metaKey) && event.key === 'f' && !searchDialog.open && !$('document').hidden) { event.preventDefault(); $('find-input').focus(); }
 });
 async function refreshVerification(stats) {
     try {
@@ -298,24 +365,85 @@ async function refreshVerification(stats) {
       }
     } catch { /* The pending state remains visible if the report is unavailable. */ }
 }
-async function initialize() {
-  try {
-    fetch('data/site.json',{cache:'no-store'}).then(response=>response.ok?response.json():null).then(site=>{if(!site)return;if(site.repository_url)document.querySelectorAll('.repo-link').forEach(link=>{link.href=site.repository_url;link.hidden=false;});if(site.our_certificate==='Available'){$('our-certificate-status').textContent='Available';$('our-certificate-download').href=site.certificate_url;$('our-certificate-download').hidden=false;}}).catch(()=>{});
-    const statsResponse = await fetch('data/stats.json');
-    if (!statsResponse.ok) throw new Error('Could not load archive statistics.');
-    const stats = await statsResponse.json();
+const statisticsTabs = [...document.querySelectorAll('.statistics-tabs [role="tab"]')];
+let statisticsIndex = 0;
+
+function redrawProofGuide() {
+  if (document.body.dataset.view === 'statistics' && !$('statistics-dependencies').hidden) {
+    requestAnimationFrame(() => proofGuide?.redraw());
+  }
+}
+
+function selectStatistics(index) {
+  if (index < 0 || index >= statisticsTabs.length || index === statisticsIndex) return;
+  const currentTab = statisticsTabs[statisticsIndex];
+  const nextTab = statisticsTabs[index];
+  const panel = $(nextTab.getAttribute('aria-controls'));
+  $(currentTab.getAttribute('aria-controls')).hidden = true;
+  currentTab.setAttribute('aria-selected', 'false');
+  currentTab.tabIndex = -1;
+  nextTab.setAttribute('aria-selected', 'true');
+  nextTab.tabIndex = 0;
+  panel.dataset.direction = index < statisticsIndex ? 'previous' : 'next';
+  panel.hidden = false;
+  statisticsIndex = index;
+  $('statistics-previous').disabled = index === 0;
+  $('statistics-next').disabled = index === statisticsTabs.length - 1;
+  nextTab.scrollIntoView({block: 'nearest', inline: 'nearest'});
+  redrawProofGuide();
+}
+
+statisticsTabs.forEach((tab, index) => {
+  tab.onclick = () => selectStatistics(index);
+  tab.onkeydown = event => {
+    const targets = {ArrowLeft: index - 1, ArrowRight: index + 1, Home: 0, End: statisticsTabs.length - 1};
+    const target = targets[event.key];
+    if (target === undefined) return;
+    event.preventDefault();
+    if (!statisticsTabs[target]) return;
+    selectStatistics(target);
+    statisticsTabs[target].focus();
+  };
+});
+$('statistics-previous').onclick = () => selectStatistics(statisticsIndex - 1);
+$('statistics-next').onclick = () => selectStatistics(statisticsIndex + 1);
+
+async function readReport(name) {
+  const response = await fetch(`data/${name}.json`);
+  if (!response.ok) throw new Error(`Could not load the ${name} report.`);
+  return response.json();
+}
+
+function loadSiteDetails() {
+  siteDetailsPromise ??= fetch('data/site.json', {cache: 'no-store'})
+    .then(response => response.ok ? response.json() : null)
+    .then(site => {
+      if (site?.repository_url) {
+        document.querySelectorAll('.repo-link').forEach(link => {
+          link.href = site.repository_url;
+          link.hidden = false;
+        });
+      }
+      if (site?.our_certificate === 'Available' && site.certificate_url) {
+        $('our-certificate-status').textContent = 'Available';
+        $('our-certificate-download').href = site.certificate_url;
+        $('our-certificate-download').hidden = false;
+      }
+    })
+    .catch(() => {});
+}
+
+async function initializeStatistics() {
+    const [stats, summary] = await Promise.all([readReport('stats'), readReport('dependencies'), loadArchive()]);
+    loadSiteDetails();
     proofGuide = initializeProofGuide(navigate);
     $('stat-lines').textContent = number(stats.lines); $('stat-files').textContent = number(stats.files); $('stat-nonblank').textContent = number(stats.nonblank_lines);
-    $('archive-size').textContent = `${number(stats.files)} files · ${number(stats.lines)} lines`;
     for (const [name, group] of Object.entries(stats.groups)) {
       const row = document.createElement('div'); row.className = 'group';
       const label = document.createElement('span'); label.textContent = name;
       const count = document.createElement('span'); count.textContent = `${number(group.files)} files · ${number(group.lines)} lines`;
       row.append(label, count); $('groups').append(row);
     }
-    const summaryResponse = await fetch('data/dependencies.json');
-    if (!summaryResponse.ok) throw new Error('Could not load dependency statistics.');
-    const summary = await summaryResponse.json();
     const counts = stats.declaration_counts_textual;
     const extra = [
       [number(counts.theorem || 0), 'theorem declarations'],
@@ -330,17 +458,16 @@ async function initialize() {
     ];
     for (const [value,label] of extra) { const card=document.createElement('div'); const strong=document.createElement('strong');strong.textContent=value; const span=document.createElement('span');span.textContent=label;card.append(strong,span);$('extra-stats').append(card); }
     const note=document.createElement('p');note.className='count-note';note.textContent='Declaration counts are textual source counts. They are not a count of declarations successfully checked by Lean.';$('extra-stats').after(note);
-    renderGroupWeb(summary,stats,group=>{document.querySelector('input[value=files]').checked=true;stopSearch();$('search-input').value=group;searchFiles();});
+    renderGroupWeb(summary, stats, group => {
+      document.querySelector('input[value=files]').checked = true;
+      stopSearch();
+      $('search-input').value = group;
+      openSearch();
+    });
     renderDependencyLayers(summary,navigate);
     $('dependency-summary').textContent=`${number(summary.nodes)} project modules · ${number(summary.internal_import_edges)} internal import edges · ${number(summary.main_import_cycles_detected)} import cycles detected in Main’s closure. All source files are reachable from Main.`;
-    await refreshVerification(stats);
+    refreshVerification(stats);
     setInterval(() => refreshVerification(stats), 10000);
-    manifest = await unpack('data/manifest.json.gz');
-    lookup = new Map(manifest.map(entry => [entry[0], entry]));
-    dependencyExplorer = createDependencyExplorer(manifest,unpack,navigate,navigateDependencies);
-    repository=createRepositoryExplorer(manifest,navigate);
     createSourceTreemap(manifest,summary,navigate);
-    searchFiles(); await route();
-  } catch (problem) { error(problem.message); $('result-count').textContent = 'Archive could not load.'; }
 }
-initialize();
+route();

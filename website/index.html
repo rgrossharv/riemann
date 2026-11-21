@@ -4,76 +4,170 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Read and search the complete plain-text Lean archive linked by Levent Alpöge, with source statistics and verification results.">
-  <meta name="color-scheme" content="dark light">
-  <title>Riemann · Text archive</title>
+  <meta name="color-scheme" content="dark">
+  <title>Riemann Hypothesis</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="interface.css">
   <script type="module" src="app.js"></script>
+  <script type="module" src="zeta-spiral.js"></script>
 </head>
-<body>
+<body data-view="home">
   <header class="masthead">
-    <a class="brand" href="#"><span class="brand-mark">ζ</span><span>Riemann <small>TEXT ARCHIVE</small></span></a>
-    <nav aria-label="Main navigation"><button id="overview-button">Overview</button><button id="repository-button">Repository</button><button id="dependencies-button">Dependency web</button><a href="remark.pdf" target="_blank" rel="noopener">Original PDF</a><button id="theme-button" aria-label="Toggle light and dark theme">Light / dark</button></nav>
+    <a class="brand" href="#" aria-label="Riemann Archive home">Riemann Archive</a>
+    <nav class="view-nav" aria-label="Archive views">
+      <a id="repository-button" href="#code">Code</a>
+      <a id="overview-button" href="#statistics">Statistics</a>
+    </nav>
+    <nav class="header-actions" aria-label="Archive resources">
+      <button id="search-button" type="button" aria-label="Search" aria-haspopup="dialog" aria-controls="archive-search" aria-keyshortcuts="Meta+K Control+K"><span class="search-icon" aria-hidden="true"></span><span class="search-label">Search</span></button>
+      <a href="remark.pdf" target="_blank" rel="noopener" aria-label="Original PDF"><span><span class="pdf-qualifier">Original </span>PDF</span><span class="pdf-arrow" aria-hidden="true">↗</span></a>
+      <a id="extras-link" href="#extras">Extras</a>
+    </nav>
   </header>
   <main class="workspace">
-    <aside class="sidebar" aria-label="Archive navigation">
-      <div class="sidebar-head"><span class="eyebrow">THE COMPLETE SOURCE</span><h1>Explore the text.</h1><p id="archive-size">Loading archive…</p></div>
-      <div class="sidebar-tabs" role="tablist" aria-label="Archive panels"><button id="search-button" class="selected" role="tab" aria-selected="true">Search</button><button id="explorer-button" role="tab" aria-selected="false">Explorer</button></div>
-      <div id="search-panel" class="search-panel">
-      <form id="search-form" role="search">
-        <label for="search-input">Search the archive</label>
-        <div class="search-box"><input id="search-input" type="search" placeholder="File name, word, or phrase" autocomplete="off"><button type="submit" aria-label="Search">Find</button></div>
-        <div class="search-modes"><label><input type="radio" name="mode" value="files" checked> File names</label><label><input type="radio" name="mode" value="text"> Full text</label></div>
-        <p class="hint" id="search-hint">Full text searches whole words and exact phrases.</p>
-      </form>
-      <div class="quick-links"><button data-open="Main.txt">Main theorem</button><button data-open="Statements.txt">Statements</button></div>
-      <div class="result-meta"><span id="result-count" aria-live="polite">Preparing file list…</span><button id="cancel-search" hidden>Stop search</button></div>
-      <div id="results" class="results" role="list" aria-label="Search results"></div>
-      <button id="more-results" hidden>Show more files</button>
+    <section id="landing" class="landing" aria-labelledby="landing-title">
+      <figure class="zeta-figure">
+        <canvas id="zeta-spiral" aria-label="The Riemann zeta function evaluated on the critical line" role="img"></canvas>
+      </figure>
+      <div class="landing-copy">
+        <h1 id="landing-title">Riemann Hypothesis</h1>
+        <p>Explore Levent Alpöge’s submitted Lean argument.</p>
+        <div class="landing-actions">
+          <a class="hero-link hero-primary" href="#code">Look at the code</a>
+          <a class="hero-link" href="#statistics">Look at the statistics</a>
+        </div>
       </div>
-      <div id="explorer-panel" class="explorer-panel" hidden><div class="explorer-heading"><span>TEXT ARCHIVE</span><span>READ ONLY</span></div><div id="repo-tree" class="repo-tree" role="tree" aria-label="Repository .txt files"></div></div>
-      <footer class="sidebar-foot">Levent Alpöge · November 2026<br><a href="https://alpo.ge/remark.pdf" target="_blank" rel="noopener">Source announcement</a></footer>
+    </section>
+    <aside id="workspace-sidebar" class="sidebar" aria-label="Source explorer" hidden>
+      <div id="explorer-panel" class="explorer-panel">
+        <div class="explorer-heading"><strong>Explorer</strong><span id="archive-size"></span></div>
+        <div id="repo-tree" class="repo-tree" role="tree" aria-label="Repository source files"></div>
+      </div>
     </aside>
-    <section class="reading-pane" aria-label="Document reader">
-      <section id="overview" class="overview">
-        <span class="eyebrow">READ THE CLAIM. CHECK IT YOURSELF.</span>
-        <h2>The Riemann hypothesis,<br>open to inspection.</h2>
-        <p class="intro">Levent Alpöge’s submitted Lean argument claims the Riemann hypothesis and the stated Dirichlet L-function results. Read the complete source, inspect the exact theorem, or independently run the pinned checker on your own computer.</p>
-        <section class="theorem-card"><span class="eyebrow">THE THEOREM BEING CHECKED</span><h3>Every nontrivial zeta zero has real part ½.</h3><p class="theorem-formula">ζ(s) = 0, s ∉ {−2, −4, −6, …}, s ≠ 1 <span>⇒</span> Re(s) = ½</p><p>Here s is a complex number. The negative even integers are the trivial zeros; s = 1 is excluded. The claim concerns every other zero, at any height.</p><details><summary>Exact Lean statement</summary><pre class="exact-statement">theorem riemannHypothesis : RiemannHypothesis := rhOfAll
-
--- RiemannHypothesis in the pinned mathlib:
-∀ (s : ℂ) (_ : riemannZeta s = 0)
-  (_ : ¬∃ n : ℕ, s = -2 * (n + 1)) (_ : s ≠ 1),
-  s.re = 1 / 2</pre></details><button data-open="Main.txt">Read the theorem and its proof entry point</button></section>
-        <section class="independent-check"><div class="check-heading"><div><span class="eyebrow">INDEPENDENT VERIFICATION</span><h3>Run the check. Keep the evidence.</h3></div><div class="certificate-state"><span>Our certificate</span><strong id="our-certificate-status">To be uploaded</strong><a id="our-certificate-download" hidden>Download certificate</a></div></div><p>The Python checker verifies the source fingerprint, installs the pinned Lean tools and dependencies, compiles the proof, audits the exported theorems’ axioms, and writes a local certificate with logs, hashes, and measured CPU time.</p><div class="download-grid"><a href="downloads/verify_proof.py" download><strong>Independent checker</strong><span>One Python file · Linux, macOS, Windows via WSL</span></a><a href="downloads/lean-sources.tar.gz" download><strong>All .lean sources</strong><span>Complete pinned Lean project</span></a><a href="downloads/txt-sources.tar.gz" download><strong>All .txt sources</strong><span>Every source file as plain text</span></a><a href="downloads/proof_stats.py" download><strong>Recompute statistics</strong><span>Python standard library · no Lean installation needed</span></a></div><p class="command-label">Download the checker, then run:</p><pre class="run-command">python3 verify_proof.py</pre><p class="count-note">To use a source archive you already downloaded, add <code>--archive lean-sources.tar.gz</code>. Rerun the same command to resume an interrupted build; use <code>--fresh</code> for a new project build. Full verification can be lengthy.</p><details class="statistics-howto"><summary>Run statistics without installing Lean</summary><pre class="run-command">python3 proof_stats.py lean-sources.tar.gz --output statistics.json</pre><p class="count-note">The same script also accepts the TXT archive or an extracted source folder.</p></details><p class="count-note">A certificate records a local run and its assumptions. Its digest detects report changes; it is not an identity signature. You can rerun the same source and compiler to check the result yourself.</p><div class="check-links"><a class="repo-link" hidden target="_blank" rel="noopener">Open-source repository</a><a href="downloads/SHA256SUMS.txt">Source archive checksums</a><button data-open="Statements.txt">All exact theorem statements</button></div></section>
-        <div class="stats-grid"><div><strong id="stat-lines">—</strong><span>total lines</span></div><div><strong id="stat-files">—</strong><span>source files</span></div><div><strong id="stat-nonblank">—</strong><span>nonblank lines</span></div></div>
+    <section id="reading-pane" class="reading-pane" aria-label="Archive content" hidden>
+      <section id="overview" class="overview statistics" aria-labelledby="statistics-title" hidden>
+        <div class="statistics-heading">
+          <h1 id="statistics-title">Statistics</h1>
+          <div class="statistics-arrows" aria-label="Browse statistics">
+            <button id="statistics-previous" type="button" aria-label="Previous statistics panel" disabled>←</button>
+            <button id="statistics-next" type="button" aria-label="Next statistics panel">→</button>
+          </div>
+        </div>
+        <div class="statistics-tabs" role="tablist" aria-label="Statistics sections">
+          <button type="button" role="tab" id="statistics-size-tab" aria-selected="true" aria-controls="statistics-size">Archive size</button>
+          <button type="button" role="tab" id="statistics-layout-tab" aria-selected="false" aria-controls="statistics-layout" tabindex="-1">Source layout</button>
+          <button type="button" role="tab" id="statistics-dependencies-tab" aria-selected="false" aria-controls="statistics-dependencies" tabindex="-1">Dependencies</button>
+          <button type="button" role="tab" id="statistics-verification-tab" aria-selected="false" aria-controls="statistics-verification" tabindex="-1">Verification</button>
+        </div>
+        <section class="statistics-panel" id="statistics-size" role="tabpanel" aria-labelledby="statistics-size-tab" tabindex="0">
+        <div class="stats-grid"><div><strong id="stat-lines">—</strong><span>Source lines</span></div><div><strong id="stat-files">—</strong><span>Source files</span></div><div><strong id="stat-nonblank">—</strong><span>Nonblank lines</span></div></div>
         <p class="count-note">Counts include comments and blank lines. Dependencies and generated files are excluded.</p>
+        <h3 class="section-title">The archive in numbers</h3><div id="extra-stats" class="extra-stats"></div>
+        </section>
+        <section class="statistics-panel" id="statistics-layout" role="tabpanel" aria-labelledby="statistics-layout-tab" tabindex="0" hidden>
+        <section class="source-map-panel"><span class="eyebrow">A MAP OF EVERY SOURCE LINE</span><h3>Where the proof’s size comes from</h3><p class="intro-small">Rectangle area is directly proportional to source lines. Open a folder to see its contents at the same exact proportions within that folder; select a file to read it.</p><div class="treemap-toolbar"><button id="treemap-up">Parent folder</button><button id="treemap-reset">All source</button><span id="treemap-location"></span></div><svg id="source-treemap" role="img" aria-label="Source folders and files sized by exact line count"></svg><p id="treemap-inspect" class="treemap-inspect" aria-live="polite"></p><p id="treemap-total" class="count-note"></p><details class="treemap-folder-list"><summary>Browse the folders and exact counts</summary><div id="treemap-folders"></div></details></section>
+        <h3 class="section-title">Inside the archive</h3><div id="groups" class="groups"></div>
+        </section>
+        <section class="statistics-panel" id="statistics-dependencies" role="tabpanel" aria-labelledby="statistics-dependencies-tab" tabindex="0" hidden>
+        <section class="layer-panel" aria-labelledby="layers-title"><span class="eyebrow">EXACT LINE COUNTS · SHARED FILES COUNTED ONCE</span><h3 id="layers-title">Source size by dependency layer</h3><p class="intro-small">Layer 0 is Main.txt. A file’s layer is its shortest import distance from Main. Each file belongs to one layer, even when many modules import it.</p><p class="count-note">Bar width is proportional to physical source lines on one linear scale, starting at zero. Colors divide each layer by source section. Counts include comments and blank lines; external dependencies are excluded.</p><div id="layer-legend" class="layer-legend"></div><svg id="layer-profile" class="layer-profile" role="img" aria-label="Exact source lines across all 44 dependency layers"></svg><div class="profile-controls"><button id="profile-previous">Previous layer</button><span id="profile-hover" aria-live="polite"></span><button id="profile-next">Next layer</button></div><details class="layer-table"><summary>Inspect the exact layer totals</summary><div class="layer-axis-row"><span>Layer</span><div id="layer-axis" class="layer-axis"></div><span>Lines</span></div><div id="layer-bars" class="layer-bars" aria-label="Exact source lines by shortest import distance"></div></details><p id="layer-total" class="count-note"></p><div class="layer-detail"><h4 id="layer-detail-title"></h4><div id="layer-breakdown"></div><h4>Largest source files in this layer</h4><div id="layer-largest-files"></div></div></section>
         <section class="proof-guide" aria-labelledby="proof-guide-title">
           <div class="visual-caption"><span class="eyebrow">MAP OF THE SUBMITTED ARGUMENT</span><h3 id="proof-guide-title">Follow this proof’s final assembly.</h3><p>Start from the claimed upstream inputs and trace how the code reaches RH. Select a step for an explanation and a direct link to its source.</p></div>
           <div id="proof-stage-canvas" class="proof-stage-canvas"><svg id="proof-connectors" aria-hidden="true"></svg><div id="proof-stages" class="proof-stages"></div></div>
           <div class="proof-detail"><span class="eyebrow">SELECTED STEP</span><h4 id="proof-detail-title"></h4><p id="proof-detail-explanation"></p><p id="proof-detail-connection"></p><p id="proof-detail-theorem" class="theorem-name"></p><p id="proof-detail-file" class="source-location"></p><button id="proof-open-source">Read source (.txt)</button></div>
           <p class="visual-note">This reading guide is inferred from the submitted definitions and theorem applications. Large internal arguments are collapsed. Step cards show logical relationships; the quantitative layer chart below measures unique source lines. The compilation report below separately records what has been verified on this computer.</p>
         </section>
+        <details class="section-network"><summary>Inspect imports between source sections</summary><h3 class="section-title">A web of source dependencies</h3><p class="intro-small">Each connection represents explicit imports between project modules. Circle area is directly proportional to each section’s source line count. Connections indicate imports and have uniform width. Select a section to browse its files.</p><svg id="group-web" viewBox="0 0 800 500" role="img" aria-label="Import connections between sections of the submitted proof"></svg><p id="dependency-summary" class="count-note"></p><button id="explore-dependencies">Explore individual modules</button></details>
+        </section>
+        <section class="statistics-panel" id="statistics-verification" role="tabpanel" aria-labelledby="statistics-verification-tab" tabindex="0" hidden>
         <div class="verification"><span class="eyebrow">LOCAL VERIFICATION</span><h3 id="verification-title">Verification pending</h3><p id="verification-detail">A successful typecheck has not yet been established.</p><p id="verification-meta"></p></div>
+        <div class="timing-panel"><span class="eyebrow">MEASURED ON THIS COMPUTER</span><h3>Compilation time</h3><div class="timing-grid"><div><strong id="cpu-hours">Pending</strong><span>CPU hours recorded</span></div><div><strong id="wall-time">Pending</strong><span>elapsed wall time</span></div><div><strong id="build-memory">Pending</strong><span>peak summed process RSS</span></div></div><p id="timing-note">A completed full-proof typecheck time is not yet available.</p><p id="timing-snapshot"></p></div>
+        <section class="theorem-card"><span class="eyebrow">THE THEOREM BEING CHECKED</span><h3>Every nontrivial zeta zero has real part ½.</h3><p class="theorem-formula">ζ(s) = 0, s ∉ {−2, −4, −6, …}, s ≠ 1 <span>⇒</span> Re(s) = ½</p><p>Here s is a complex number. The negative even integers are the trivial zeros; s = 1 is excluded. The claim concerns every other zero, at any height.</p><details><summary>Exact Lean statement</summary><pre class="exact-statement">theorem riemannHypothesis : RiemannHypothesis := rhOfAll
+
+-- RiemannHypothesis in the pinned mathlib:
+∀ (s : ℂ) (_ : riemannZeta s = 0)
+  (_ : ¬∃ n : ℕ, s = -2 * (n + 1)) (_ : s ≠ 1),
+  s.re = 1 / 2</pre></details><button data-open="Main.txt">Read the theorem and its proof entry point</button></section>
+        <p class="verification-tools"><a href="#extras">Run the independent verification tools</a></p>
         <h3 class="section-title">Start with the statements</h3>
         <div class="entry-grid"><button data-open="Main.txt"><strong>Main.txt</strong><span>The five claimed conclusions.</span></button><button data-open="Statements.txt"><strong>Statements.txt</strong><span>The precise propositions about zeros.</span></button></div>
-        <h3 class="section-title">The archive in numbers</h3><div id="extra-stats" class="extra-stats"></div>
-        <div class="timing-panel"><span class="eyebrow">MEASURED ON THIS COMPUTER</span><h3>Compilation time</h3><div class="timing-grid"><div><strong id="cpu-hours">Pending</strong><span>CPU hours recorded</span></div><div><strong id="wall-time">Pending</strong><span>elapsed wall time</span></div><div><strong id="build-memory">Pending</strong><span>peak summed process RSS</span></div></div><p id="timing-note">A completed full-proof typecheck time is not yet available.</p><p id="timing-snapshot"></p></div>
-        <section class="layer-panel" aria-labelledby="layers-title"><span class="eyebrow">EXACT LINE COUNTS · SHARED FILES COUNTED ONCE</span><h3 id="layers-title">Source size by dependency layer</h3><p class="intro-small">Layer 0 is Main.txt. A file’s layer is its shortest import distance from Main. Each file belongs to one layer, even when many modules import it.</p><p class="count-note">Bar width is proportional to physical source lines on one linear scale, starting at zero. Colors divide each layer by source section. Counts include comments and blank lines; external dependencies are excluded.</p><div id="layer-legend" class="layer-legend"></div><svg id="layer-profile" class="layer-profile" role="img" aria-label="Exact source lines across all 44 dependency layers"></svg><div class="profile-controls"><button id="profile-previous">Previous layer</button><span id="profile-hover" aria-live="polite"></span><button id="profile-next">Next layer</button></div><details class="layer-table"><summary>Inspect the exact layer totals</summary><div class="layer-axis-row"><span>Layer</span><div id="layer-axis" class="layer-axis"></div><span>Lines</span></div><div id="layer-bars" class="layer-bars" aria-label="Exact source lines by shortest import distance"></div></details><p id="layer-total" class="count-note"></p><div class="layer-detail"><h4 id="layer-detail-title"></h4><div id="layer-breakdown"></div><h4>Largest source files in this layer</h4><div id="layer-largest-files"></div></div></section>
-        <section class="source-map-panel"><span class="eyebrow">A MAP OF EVERY SOURCE LINE</span><h3>Where the proof’s size comes from</h3><p class="intro-small">Rectangle area is directly proportional to source lines. Open a folder to see its contents at the same exact proportions within that folder; select a file to read it.</p><div class="treemap-toolbar"><button id="treemap-up">Parent folder</button><button id="treemap-reset">All source</button><span id="treemap-location"></span></div><svg id="source-treemap" role="img" aria-label="Source folders and files sized by exact line count"></svg><p id="treemap-inspect" class="treemap-inspect" aria-live="polite"></p><p id="treemap-total" class="count-note"></p><details class="treemap-folder-list"><summary>Browse the folders and exact counts</summary><div id="treemap-folders"></div></details></section>
-        <details class="section-network"><summary>Inspect imports between source sections</summary><h3 class="section-title">A web of source dependencies</h3><p class="intro-small">Each connection represents explicit imports between project modules. Circle area is directly proportional to each section’s source line count. Connections indicate imports and have uniform width. Select a section to browse its files.</p><svg id="group-web" viewBox="0 0 800 500" role="img" aria-label="Import connections between sections of the submitted proof"></svg><p id="dependency-summary" class="count-note"></p><button id="explore-dependencies">Explore individual modules</button></details>
-        <h3 class="section-title">Inside the archive</h3><div id="groups" class="groups"></div>
         <p class="provenance">Text copies preserve the original source bytes. A claimed result is not a verified proof until the complete required sources pass the compiler and their dependencies are checked.</p><footer class="open-source-note"><strong>Vibecoded, openly inspectable.</strong><p>This website was vibecoded with AI assistance. The website and checking tools are open source, and the submitted Lean sources, pinned inputs, statistics scripts, and build instructions are available for independent verification.</p><a class="repo-link" hidden target="_blank" rel="noopener">Inspect the source and reproduce the check</a><p class="count-note">Proof source: Levent Alpöge. The website and checker use the MIT license; third-party authorship and licenses are retained.</p></footer>
+        </section>
       </section>
-      <section id="document" class="document" hidden>
-        <div id="file-tabs" class="file-tabs" role="tablist" aria-label="Open source files"></div><div id="file-breadcrumbs" class="file-breadcrumbs" aria-label="File path"></div>
-        <div class="document-head"><div class="document-title"><span class="eyebrow">READ-ONLY LEAN · TXT SOURCE</span><h2 id="file-name"></h2><p id="file-path"></p></div><div class="document-actions"><button id="file-dependencies">Dependencies</button><button id="copy-link">Copy link</button><a id="download-text" download>Download .txt</a><a id="download-lean" download>Download .lean</a></div></div>
-        <div class="reader-tools"><label for="find-input">Find in file</label><input id="find-input" type="search" placeholder="Text to find"><button id="find-previous" aria-label="Previous match">Previous</button><button id="find-next" aria-label="Next match">Next</button><span id="find-count" aria-live="polite"></span><label for="line-input">Line</label><input id="line-input" type="number" min="1" value="1"><button id="go-line">Go</button><label class="wrap-label"><input id="wrap-text" type="checkbox"> Wrap</label></div>
+      <section id="extras-page" class="overview extras" aria-labelledby="extras-title" hidden>
+        <h1 id="extras-title">Extras</h1>
+
+        <section class="independent-check" aria-labelledby="checker-title">
+          <div class="check-heading">
+            <h2 id="checker-title">Verify the proof</h2>
+            <div class="certificate-state"><span>Archive certificate</span><strong id="our-certificate-status">To be uploaded</strong><a id="our-certificate-download" hidden>Download certificate</a></div>
+          </div>
+          <p>The checker uses Python 3.10 or later with no Python packages to install. Use macOS, Linux, or Ubuntu under WSL on Windows. On macOS, install the Apple command line tools with <code>xcode-select --install</code> if prompted.</p>
+          <p>The first full run needs internet access and a writable folder. The extracted source alone takes about 1 GB. The Lean toolchain, mathlib, and build files need additional space, and the typecheck can take a long time.</p>
+          <div class="download-grid">
+            <a href="downloads/verify_proof.py" download><strong>Download verify_proof.py</strong><span>Standalone proof checker</span></a>
+            <a href="downloads/lean-sources.tar.gz" download><strong>Download Lean sources</strong><span>Pinned project and proof source</span></a>
+          </div>
+          <p>Open a terminal in the folder containing the script. Preview the steps, or run the full check.</p>
+          <dl class="command-list">
+            <dt>Preview the steps</dt>
+            <dd><pre class="run-command"><code>python3 verify_proof.py --plan</code></pre></dd>
+            <dt>Run the full check</dt>
+            <dd><pre class="run-command"><code>python3 verify_proof.py</code></pre></dd>
+          </dl>
+          <p>The checker finds <code>lean-sources.tar.gz</code> in the current folder or beside the script, and downloads the source if neither copy is present. Use <code>--archive "/path/to/lean-sources.tar.gz"</code> to choose an archive explicitly.</p>
+          <p>Rerun the same command to resume an interrupted build. Use <code>--work-dir</code> to select a different destination or <code>--stats-only</code> to check the source fingerprint and configuration without starting Lean.</p>
+          <p>Results, logs, and <code>certificate.json</code> are written to <code>riemann-independent-check/results/</code> by default. The certificate reports the run status and records the exported theorems’ axioms after a successful typecheck.</p>
+        </section>
+
+        <section class="independent-check" aria-labelledby="statistics-tool-title">
+          <h2 id="statistics-tool-title">Recompute the statistics</h2>
+          <p>The statistics script runs with Python 3.10 or later on Linux, macOS, and Windows. It reads a Lean or TXT archive directly and writes counts, a source fingerprint, and dependency layers to JSON.</p>
+          <div class="download-grid">
+            <a href="downloads/proof_stats.py" download><strong>Download proof_stats.py</strong><span>Standalone statistics script</span></a>
+            <a href="downloads/txt-sources.tar.gz" download><strong>Download TXT sources</strong><span>Plain-text copy of the source tree</span></a>
+          </div>
+          <pre class="run-command"><code>python3 proof_stats.py txt-sources.tar.gz --output statistics.json</code></pre>
+          <p>Substitute <code>lean-sources.tar.gz</code> or the path to an extracted source folder as needed. In a native Windows terminal, use <code>py -3</code> in place of <code>python3</code> if that is how you launch Python.</p>
+          <div class="check-links"><a href="downloads/SHA256SUMS.txt">Source archive checksums</a><a class="repo-link" hidden target="_blank" rel="noopener">Open-source repository</a></div>
+        </section>
+      </section>
+      <section id="document" class="document" aria-labelledby="file-name" hidden>
+        <h1 id="file-name" class="visually-hidden"></h1>
+        <div id="file-breadcrumbs" class="file-breadcrumbs" aria-label="File path"></div>
+        <div class="reader-tools" role="group" aria-label="Source controls">
+          <div class="reader-find">
+            <input id="find-input" type="search" aria-label="Find in file" placeholder="Find in file"><button id="find-previous" aria-label="Previous match">↑</button><button id="find-next" aria-label="Next match">↓</button><span id="find-count" aria-live="polite"></span>
+          </div>
+          <div class="document-actions">
+            <button id="file-dependencies">Dependencies</button><button id="copy-link">Copy link</button><a id="download-text" download>Download .txt</a><a id="download-lean" download>Download .lean</a>
+          </div>
+          <div class="reader-options">
+            <label for="line-input">Line</label><input id="line-input" type="number" min="1" value="1"><button id="go-line">Go</button><label class="wrap-label"><input id="wrap-text" type="checkbox"> Wrap</label>
+          </div>
+        </div>
         <div id="text-surface" class="text-surface"><div id="lean-editor" hidden></div><pre id="line-numbers" aria-hidden="true"></pre><textarea id="plain-text" readonly wrap="off" spellcheck="false" aria-label="Source file as plain text"></textarea></div>
         <div class="document-foot"><span id="document-position">Line 1</span><span id="document-info"></span></div>
       </section>
       <section id="dependencies" class="dependency-view" hidden><span class="eyebrow">SOURCE IMPORT GRAPH</span><h2>Explore the dependencies.</h2><p class="intro-small">Inspect a file’s imports and the modules that use it. This graph is extracted from source imports; it is not a kernel-level analysis of proof terms.</p><form id="dependency-form"><label for="dependency-input">Choose a source file</label><div class="search-box"><input id="dependency-input" type="search" placeholder="Main.txt or part of a path" autocomplete="off"><button type="submit">Inspect</button></div><div id="dependency-suggestions" class="dependency-suggestions"></div></form><h3 id="dependency-selected"></h3><p id="dependency-counts" class="count-note"></p><button id="dependency-read">Read this file (.txt)</button><div class="module-web-scroll"><svg id="module-web" role="img" aria-label="Direct imports and importers of the selected file"></svg></div><p id="dependency-graph-note" class="count-note"></p><div class="dependency-lists"><div><h3>Imports</h3><div id="imports-list"></div></div><div><h3>Imported by</h3><div id="importers-list"></div></div></div></section>
-      <div id="error" class="error" hidden role="alert"></div>
+      <section id="empty-reader" class="empty-reader" hidden>
+        <h1>Code explorer</h1><p>Select a file in the explorer to read its Lean source.</p>
+        <button type="button" data-open="Main.txt">Open Main.txt</button>
+      </section>
     </section>
+    <div id="error" class="error" hidden role="alert"></div>
   </main>
+  <dialog id="archive-search" class="archive-search" aria-labelledby="search-title">
+    <div class="search-heading"><h2 id="search-title">Search</h2><button id="close-search" type="button" aria-label="Close search">×</button></div>
+    <div class="search-panel">
+      <form id="search-form" role="search">
+        <div class="search-box"><input id="search-input" type="search" aria-label="Search the archive" aria-describedby="search-hint" placeholder="File name, word, or phrase" autocomplete="off" autofocus><button type="submit" aria-label="Search">Find</button></div>
+        <div class="search-modes"><label><input type="radio" name="mode" value="files" checked> File names</label><label><input type="radio" name="mode" value="text"> Full text</label></div>
+        <p class="hint" id="search-hint">Full text searches whole words and exact phrases.</p>
+      </form>
+      <div class="result-meta"><span id="result-count" aria-live="polite">Preparing file list…</span><button id="cancel-search" hidden>Stop search</button></div>
+      <div id="results" class="results" role="list" aria-label="Search results"></div>
+      <button id="more-results" hidden>Show more files</button>
+    </div>
+  </dialog>
 </body>
 </html>

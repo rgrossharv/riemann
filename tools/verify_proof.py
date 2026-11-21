@@ -56,11 +56,12 @@ def download(url,path,expected=None):
 
 def safe_extract(archive,destination,proof=True):
     destination=Path(destination).resolve()
+    config_files={('lean','lean-toolchain'),('lean','lakefile.toml'),('lean','lake-manifest.json')}
     with tarfile.open(archive,'r:gz') as source:
         for member in source:
             parts=PurePosixPath(member.name).parts
             if member.name.startswith('/') or '..' in parts or not (member.isfile() or member.isdir()):raise ValueError('Unsafe archive entry: '+member.name)
-            if proof and member.isfile() and not (len(parts)>2 and parts[:2]==('lean','src') and parts[-1].endswith('.lean') or member.name in ('lean/lean-toolchain','lean/lakefile.toml','lean/lake-manifest.json')):raise ValueError('Unexpected proof archive entry: '+member.name)
+            if proof and member.isfile() and parts not in config_files and not (len(parts)>2 and parts[:2]==('lean','src') and parts[-1].endswith('.lean')):raise ValueError('Unexpected proof archive entry: '+member.name)
             target=destination.joinpath(*parts)
             if not target.resolve().is_relative_to(destination):raise ValueError('Archive escapes the working directory')
             if member.isdir():target.mkdir(parents=True,exist_ok=True)
@@ -71,14 +72,20 @@ def safe_extract(archive,destination,proof=True):
 
 
 def ensure_system_tools(yes):
-    missing=[name for name in ('git','cc','make') if not shutil.which(name)]
+    system=platform.system()
+    if system=='Darwin' and shutil.which('cc')=='/usr/bin/cc':
+        developer_dir=subprocess.run(['xcode-select','--print-path'],capture_output=True,text=True)
+        path=developer_dir.stdout.strip()
+        if developer_dir.returncode or not path or not Path(path).is_dir():
+            raise RuntimeError('Install the Apple command line tools with xcode-select --install, then rerun the checker.')
+    missing=[name for name in ('git','cc','make','curl') if not shutil.which(name)]
     if not missing:return
-    if platform.system()=='Linux' and shutil.which('apt-get'):
+    if system=='Linux' and shutil.which('apt-get'):
         prefix=[] if os.geteuid()==0 else ['sudo'];commands=[prefix+['apt-get','update'],prefix+['apt-get','install','-y','git','curl','build-essential','zstd']]
-    elif platform.system()=='Linux' and shutil.which('dnf'):
+    elif system=='Linux' and shutil.which('dnf'):
         prefix=[] if os.geteuid()==0 else ['sudo'];commands=[prefix+['dnf','install','-y','git','curl','gcc','gcc-c++','make','zstd']]
-    elif platform.system()=='Darwin' and shutil.which('brew'):commands=[['brew','install','git','make']]
-    else:raise RuntimeError('Install git and a C/C++ build toolchain first. On macOS run xcode-select --install; on Windows use Ubuntu in WSL.')
+    elif system=='Darwin' and shutil.which('brew') and 'cc' not in missing:commands=[['brew','install',*missing]]
+    else:raise RuntimeError('Install the required tools ('+', '.join(missing)+'). On macOS run xcode-select --install. On Windows use Ubuntu in WSL.')
     print('Missing system tools:',', '.join(missing))
     for command in commands:print('  '+' '.join(command))
     if not yes and input('Install these missing dependencies? [y/N] ').strip().lower() not in ('y','yes'):raise RuntimeError('System dependency installation declined')
@@ -86,13 +93,21 @@ def ensure_system_tools(yes):
 
 
 def get_source(args,manifest,work):
-    project=Path(args.source).expanduser().resolve() if args.source else work/'lean'
+    if args.source:
+        project=Path(args.source).expanduser().resolve()
+        if not (project/'src').is_dir():raise ValueError('--source must point to an extracted Lean project containing src/')
+        return project
+    project=work/'lean'
+    filename='lean-sources.tar.gz'
+    cached=work/'downloads'/filename
+    if args.archive:
+        archive=Path(args.archive).expanduser().resolve()
+        if not archive.is_file():raise FileNotFoundError('The archive specified with --archive does not exist or is not a file: '+str(archive))
+    else:
+        local_archives=(Path.cwd()/filename,Path(__file__).resolve().with_name(filename))
+        archive=next((candidate for candidate in local_archives if candidate.is_file()),cached)
     if (project/'src').is_dir():return project
-    if args.source:raise ValueError('--source must point to an extracted Lean project containing src/')
-    archive=Path(args.archive).expanduser().resolve() if args.archive else work/'downloads/lean-sources.tar.gz'
-    if not archive.exists():
-        if args.archive:
-            raise FileNotFoundError('The archive specified with --archive does not exist')
+    if not archive.is_file():
         if args.source_url:
             try:download(args.source_url,archive)
             except Exception as error:
@@ -141,8 +156,9 @@ def main():
     if sys.version_info<(3,10):raise SystemExit('Python 3.10 or newer is required.')
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--work-dir',default='riemann-independent-check')
-    parser.add_argument('--source',help='Use an existing extracted Lean project')
-    parser.add_argument('--archive',help='Use a downloaded lean-sources.tar.gz')
+    source=parser.add_mutually_exclusive_group()
+    source.add_argument('--source',help='Use an existing extracted Lean project')
+    source.add_argument('--archive',help='Use a downloaded lean-sources.tar.gz (a copy in the current or script directory is found automatically)')
     parser.add_argument('--source-url',default='https://riemann.rylandgross.com/downloads/lean-sources.tar.gz',
                         help='Try this Lean source bundle before using the original checksum-pinned download parts')
     parser.add_argument('--yes',action='store_true',help='Approve installing missing system packages')
