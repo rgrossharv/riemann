@@ -1,0 +1,5 @@
+Official Lean 4 VS Code extension grammar.
+Publisher: leanprover
+Installed extension version: 0.0.242
+Source: https://github.com/leanprover/vscode-lean4
+The grammar and its Apache-2.0 license are preserved unchanged.

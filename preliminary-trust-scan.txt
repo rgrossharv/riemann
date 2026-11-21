@@ -1,0 +1,10 @@
+lean/src/Development/AbelianVarietyTheory/BlockTheory/CMModuli/ThetaCosetLabels.lean:234:  axioms : ∀ r : EndRel g (N' ^ 2) I, (∀ Y ∈ C, Y.Sat r) → 𝒜.Sat r
+
+1 matches
+1 matched lines
+1 files contained matches
+175187 files searched
+167 bytes printed
+1030531854 bytes searched
+1.993251 seconds spent searching
+0.547838 seconds total

@@ -1,0 +1,120 @@
+{
+  "files": 175187,
+  "lines": 17374215,
+  "nonblank_lines": 15531759,
+  "blank_lines": 1842456,
+  "bytes": 1030531854,
+  "toolchain": "leanprover/lean4:v4.33.1",
+  "mathlib_revision": "0df444a360eaa60ab8c11dca51a86af692955474",
+  "source_tree_sha256": "27bd2a2fc971307240174cb58dd094f5d433980641079871fd2e8d1c9381f089",
+  "groups": {
+    "BuildAid": {
+      "files": 5,
+      "lines": 20
+    },
+    "CompanionTheory": {
+      "files": 2027,
+      "lines": 194218
+    },
+    "Development": {
+      "files": 141928,
+      "lines": 12232663
+    },
+    "Formalism": {
+      "files": 18254,
+      "lines": 3200748
+    },
+    "GroundTheory": {
+      "files": 8507,
+      "lines": 1119138
+    },
+    "Lemmata": {
+      "files": 167,
+      "lines": 9232
+    },
+    "Entry points": {
+      "files": 2,
+      "lines": 28
+    },
+    "PositivityTheory": {
+      "files": 449,
+      "lines": 55130
+    },
+    "ReciprocityTheory": {
+      "files": 3845,
+      "lines": 563016
+    },
+    "Supplements": {
+      "files": 3,
+      "lines": 22
+    }
+  },
+  "declaration_counts_textual": {
+    "def": 211894,
+    "structure": 8230,
+    "instance": 7598,
+    "theorem": 778887,
+    "lemma": 34307,
+    "abbrev": 13202,
+    "class": 43
+  },
+  "counting_method": "Physical lines in all lean/src/**/*.lean files, including comments and blanks; dependencies and generated files excluded. Nonblank means a line containing non-whitespace bytes. Declaration counts are textual, not elaborator results.",
+  "largest_files": [
+    {
+      "path": "Formalism/HermitianCurvature/HermitianCurvatureProofs/IsAdmissibleSplittingCharPairMulTwist.txt",
+      "lines": 17981,
+      "bytes": 913995
+    },
+    {
+      "path": "Formalism/SharpRestriction/CuspSpanNormBounds/LatticeGluingRadicals.txt",
+      "lines": 9252,
+      "bytes": 454809
+    },
+    {
+      "path": "Development/AutomorphicArithmetic/IntegralCasts/CapelliIdentities/FixPiIff.txt",
+      "lines": 8029,
+      "bytes": 732359
+    },
+    {
+      "path": "Formalism/SharpRestriction/CuspSpanNormBounds/KappaEndpoints.txt",
+      "lines": 6945,
+      "bytes": 381379
+    },
+    {
+      "path": "Formalism/HermitianCurvature/HermitianCurvatureProofs/UnipotentCoordinatesMeasurePreserving.txt",
+      "lines": 6929,
+      "bytes": 411977
+    },
+    {
+      "path": "Formalism/SharpRestriction/CuspSpanNormBounds/OscillatoryIntegralBounds.txt",
+      "lines": 6333,
+      "bytes": 321152
+    },
+    {
+      "path": "Formalism/HermitianCurvature/HermitianCurvatureProofs/CoordinateCommuteRaisingConstant.txt",
+      "lines": 6205,
+      "bytes": 342067
+    },
+    {
+      "path": "Development/AutomorphicArithmetic/IntegralCasts/CapelliIdentities/CovariantDegrees.txt",
+      "lines": 6170,
+      "bytes": 504790
+    },
+    {
+      "path": "Formalism/SharpRestriction/GrowthBounds/WittFrameLocaliserOrders.txt",
+      "lines": 5833,
+      "bytes": 313605
+    },
+    {
+      "path": "Development/AutomorphicArithmetic/IntegralCasts/CapelliIdentities/MemOfClosed.txt",
+      "lines": 5746,
+      "bytes": 478050
+    }
+  ],
+  "pdf_url": "https://alpo.ge/remark.pdf",
+  "theorem_files": [
+    "Statements.txt",
+    "Main.txt",
+    "Supplements/Kernels/MainTheoremsAll.txt"
+  ]
+}

@@ -1,0 +1,287 @@
+{
+  "schema_version": 1,
+  "files": 175187,
+  "lines": 17374215,
+  "nonblank_lines": 15531759,
+  "blank_lines": 1842456,
+  "bytes": 1030531854,
+  "source_tree_sha256": "27bd2a2fc971307240174cb58dd094f5d433980641079871fd2e8d1c9381f089",
+  "declaration_counts_textual": {
+    "def": 211894,
+    "structure": 8230,
+    "instance": 7598,
+    "theorem": 778887,
+    "lemma": 34307,
+    "abbrev": 13202,
+    "class": 43
+  },
+  "groups": {
+    "BuildAid": {
+      "files": 5,
+      "lines": 20
+    },
+    "CompanionTheory": {
+      "files": 2027,
+      "lines": 194218
+    },
+    "Development": {
+      "files": 141928,
+      "lines": 12232663
+    },
+    "Formalism": {
+      "files": 18254,
+      "lines": 3200748
+    },
+    "GroundTheory": {
+      "files": 8507,
+      "lines": 1119138
+    },
+    "Lemmata": {
+      "files": 167,
+      "lines": 9232
+    },
+    "Entry points": {
+      "files": 2,
+      "lines": 28
+    },
+    "PositivityTheory": {
+      "files": 449,
+      "lines": 55130
+    },
+    "ReciprocityTheory": {
+      "files": 3845,
+      "lines": 563016
+    },
+    "Supplements": {
+      "files": 3,
+      "lines": 22
+    }
+  },
+  "internal_import_edges": 753261,
+  "main_import_closure_files": 175187,
+  "layers": [
+    {
+      "depth": 0,
+      "files": 1,
+      "lines": 12
+    },
+    {
+      "depth": 1,
+      "files": 2,
+      "lines": 18
+    },
+    {
+      "depth": 2,
+      "files": 2,
+      "lines": 33
+    },
+    {
+      "depth": 3,
+      "files": 7,
+      "lines": 356
+    },
+    {
+      "depth": 4,
+      "files": 25,
+      "lines": 1648
+    },
+    {
+      "depth": 5,
+      "files": 277,
+      "lines": 18700
+    },
+    {
+      "depth": 6,
+      "files": 1639,
+      "lines": 153587
+    },
+    {
+      "depth": 7,
+      "files": 4861,
+      "lines": 572282
+    },
+    {
+      "depth": 8,
+      "files": 9956,
+      "lines": 1204208
+    },
+    {
+      "depth": 9,
+      "files": 14262,
+      "lines": 1695526
+    },
+    {
+      "depth": 10,
+      "files": 15539,
+      "lines": 1753361
+    },
+    {
+      "depth": 11,
+      "files": 15237,
+      "lines": 1677101
+    },
+    {
+      "depth": 12,
+      "files": 15095,
+      "lines": 1623229
+    },
+    {
+      "depth": 13,
+      "files": 13274,
+      "lines": 1331687
+    },
+    {
+      "depth": 14,
+      "files": 11747,
+      "lines": 1094678
+    },
+    {
+      "depth": 15,
+      "files": 10397,
+      "lines": 978650
+    },
+    {
+      "depth": 16,
+      "files": 9108,
+      "lines": 841698
+    },
+    {
+      "depth": 17,
+      "files": 7930,
+      "lines": 730105
+    },
+    {
+      "depth": 18,
+      "files": 7025,
+      "lines": 578926
+    },
+    {
+      "depth": 19,
+      "files": 5915,
+      "lines": 513105
+    },
+    {
+      "depth": 20,
+      "files": 5167,
+      "lines": 404149
+    },
+    {
+      "depth": 21,
+      "files": 4551,
+      "lines": 395845
+    },
+    {
+      "depth": 22,
+      "files": 4190,
+      "lines": 322455
+    },
+    {
+      "depth": 23,
+      "files": 3740,
+      "lines": 325565
+    },
+    {
+      "depth": 24,
+      "files": 3417,
+      "lines": 263943
+    },
+    {
+      "depth": 25,
+      "files": 2718,
+      "lines": 226698
+    },
+    {
+      "depth": 26,
+      "files": 2198,
+      "lines": 171849
+    },
+    {
+      "depth": 27,
+      "files": 1742,
+      "lines": 134407
+    },
+    {
+      "depth": 28,
+      "files": 1387,
+      "lines": 97628
+    },
+    {
+      "depth": 29,
+      "files": 1078,
+      "lines": 75020
+    },
+    {
+      "depth": 30,
+      "files": 806,
+      "lines": 53949
+    },
+    {
+      "depth": 31,
+      "files": 622,
+      "lines": 46565
+    },
+    {
+      "depth": 32,
+      "files": 378,
+      "lines": 30621
+    },
+    {
+      "depth": 33,
+      "files": 265,
+      "lines": 15785
+    },
+    {
+      "depth": 34,
+      "files": 178,
+      "lines": 11637
+    },
+    {
+      "depth": 35,
+      "files": 122,
+      "lines": 8099
+    },
+    {
+      "depth": 36,
+      "files": 88,
+      "lines": 5004
+    },
+    {
+      "depth": 37,
+      "files": 67,
+      "lines": 5655
+    },
+    {
+      "depth": 38,
+      "files": 39,
+      "lines": 2457
+    },
+    {
+      "depth": 39,
+      "files": 25,
+      "lines": 1909
+    },
+    {
+      "depth": 40,
+      "files": 38,
+      "lines": 1705
+    },
+    {
+      "depth": 41,
+      "files": 23,
+      "lines": 1856
+    },
+    {
+      "depth": 42,
+      "files": 25,
+      "lines": 447
+    },
+    {
+      "depth": 43,
+      "files": 24,
+      "lines": 2057
+    }
+  ],
+  "counting_method": "Physical source lines, including comments and blanks; dependencies and generated files excluded. Declaration counts are textual. Import headers respect nested comments. Each layer is the shortest project-import distance from Main, with each file counted once.",
+  "analysis_wall_seconds": 54.614,
+  "analysis_cpu_seconds": 54.59
+}

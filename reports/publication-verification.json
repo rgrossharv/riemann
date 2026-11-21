@@ -1,0 +1,20 @@
+{
+  "status": "running",
+  "title": "Local compilation in progress",
+  "detail": "Compiling Main and its imported proof dependencies. A successful typecheck of the claimed theorems has not yet been established.",
+  "checked_at": "2026-11-20T15:45:50.644041+00:00",
+  "steps": [
+    {
+      "label": "Checking the stated propositions",
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "src/Statements.lean"
+      ],
+      "exit_code": 0,
+      "log": "reports/statements-check.log"
+    }
+  ],
+  "toolchain": "leanprover/lean4:v4.33.1"
+}

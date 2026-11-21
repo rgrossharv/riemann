@@ -1,0 +1,16 @@
+{
+  "name": "riemann-text-archive",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:editor": "node scripts/build-editor.mjs"
+  },
+  "dependencies": {
+    "monaco-editor": "0.57.0",
+    "vscode-textmate": "9.3.2",
+    "vscode-oniguruma": "2.0.1"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "status": "running",
+  "cpu_seconds": 12550.75,
+  "cpu_hours": 3.486319,
+  "wall_seconds": 7288.18,
+  "peak_aggregate_rss_bytes_sampled": 16225083392,
+  "live_processes": 4,
+  "updated_at": "2026-11-20T17:20:49.349791+00:00",
+  "measurement": "Sampled aggregate user + system CPU time for the verification driver and its descendants, including reaped children. Excludes dependency downloads, website indexing, and the redundant diagnostic statement check. Samples every two seconds; final sample may precede process exit.",
+  "machine": {
+    "logical_cpus": 8,
+    "system": "Linux",
+    "architecture": "x86_64"
+  }
+}

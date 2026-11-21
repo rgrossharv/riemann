@@ -1,0 +1,1761 @@
+{
+  "nodes": 175187,
+  "internal_import_edges": 753261,
+  "external_import_occurrences": {
+    "Lean": 12,
+    "Mathlib": 156238,
+    "Batteries": 3
+  },
+  "main_import_closure_files": 175187,
+  "main_import_cycles_detected": 0,
+  "group_edges": [
+    [
+      "CompanionTheory",
+      "BuildAid",
+      3
+    ],
+    [
+      "CompanionTheory",
+      "CompanionTheory",
+      5034
+    ],
+    [
+      "CompanionTheory",
+      "Development",
+      1437
+    ],
+    [
+      "CompanionTheory",
+      "Formalism",
+      762
+    ],
+    [
+      "CompanionTheory",
+      "GroundTheory",
+      65
+    ],
+    [
+      "CompanionTheory",
+      "ReciprocityTheory",
+      154
+    ],
+    [
+      "Development",
+      "BuildAid",
+      35
+    ],
+    [
+      "Development",
+      "CompanionTheory",
+      1874
+    ],
+    [
+      "Development",
+      "Development",
+      577034
+    ],
+    [
+      "Development",
+      "Formalism",
+      41857
+    ],
+    [
+      "Development",
+      "GroundTheory",
+      7532
+    ],
+    [
+      "Development",
+      "PositivityTheory",
+      1057
+    ],
+    [
+      "Development",
+      "ReciprocityTheory",
+      38051
+    ],
+    [
+      "Entry points",
+      "Entry points",
+      1
+    ],
+    [
+      "Entry points",
+      "Supplements",
+      1
+    ],
+    [
+      "Formalism",
+      "CompanionTheory",
+      1
+    ],
+    [
+      "Formalism",
+      "Development",
+      236
+    ],
+    [
+      "Formalism",
+      "Formalism",
+      44412
+    ],
+    [
+      "Formalism",
+      "GroundTheory",
+      1
+    ],
+    [
+      "Formalism",
+      "Lemmata",
+      118
+    ],
+    [
+      "Formalism",
+      "ReciprocityTheory",
+      348
+    ],
+    [
+      "GroundTheory",
+      "CompanionTheory",
+      2
+    ],
+    [
+      "GroundTheory",
+      "Development",
+      57
+    ],
+    [
+      "GroundTheory",
+      "Formalism",
+      10
+    ],
+    [
+      "GroundTheory",
+      "GroundTheory",
+      20797
+    ],
+    [
+      "GroundTheory",
+      "ReciprocityTheory",
+      1161
+    ],
+    [
+      "Lemmata",
+      "Formalism",
+      634
+    ],
+    [
+      "Lemmata",
+      "ReciprocityTheory",
+      7
+    ],
+    [
+      "PositivityTheory",
+      "Development",
+      632
+    ],
+    [
+      "PositivityTheory",
+      "Formalism",
+      8
+    ],
+    [
+      "PositivityTheory",
+      "GroundTheory",
+      111
+    ],
+    [
+      "PositivityTheory",
+      "PositivityTheory",
+      773
+    ],
+    [
+      "PositivityTheory",
+      "ReciprocityTheory",
+      2
+    ],
+    [
+      "ReciprocityTheory",
+      "CompanionTheory",
+      1
+    ],
+    [
+      "ReciprocityTheory",
+      "Development",
+      17
+    ],
+    [
+      "ReciprocityTheory",
+      "Formalism",
+      266
+    ],
+    [
+      "ReciprocityTheory",
+      "Lemmata",
+      50
+    ],
+    [
+      "ReciprocityTheory",
+      "ReciprocityTheory",
+      8711
+    ],
+    [
+      "Supplements",
+      "Development",
+      6
+    ],
+    [
+      "Supplements",
+      "Formalism",
+      1
+    ],
+    [
+      "Supplements",
+      "Supplements",
+      2
+    ]
+  ],
+  "most_imported": [
+    [
+      "Development/AbelianVarietyTheory/Definitions/Divisors/CTSmallCone.txt",
+      3088
+    ],
+    [
+      "Development/AbelianVarietyTheory/Definitions/Divisors/SiegelWeilAnisotropicHermitian.txt",
+      2972
+    ],
+    [
+      "Development/AbelianVarietyTheory/Definitions/Divisors/DiscreteSeriesHermitianUnique.txt",
+      2518
+    ],
+    [
+      "Development/AbelianVarietyTheory/PublishedTheorems/AutomorphicForms\u2082/ExistsNormLeHeightPow.txt",
+      2426
+    ],
+    [
+      "ReciprocityTheory/ReductiveGroups/ArithmeticGeometry/BirationalGeometry/ToroidalCompactification/UniformisationConclusion.txt",
+      2390
+    ],
+    [
+      "ReciprocityTheory/ReductiveGroups/ArithmeticGeometry/ExtensionDescent/UnifUniqSt.txt",
+      2284
+    ],
+    [
+      "Development/AutomorphicArithmetic/ThetaCorrespondence/ThetaPairLifts/ThirdPlaceSeries/CohomologicalCsdTempered.txt",
+      2242
+    ],
+    [
+      "Development/AbelianVarietyTheory/Definitions/Divisors/ToKnownTheoremsOf.txt",
+      1838
+    ],
+    [
+      "Development/AbelianVarietyTheory/PublishedTheorems/TwistedTraceFormula/HarishChandraModulesOn.txt",
+      1653
+    ],
+    [
+      "ReciprocityTheory/ReductiveGroups/ArithmeticGeometry/BirationalGeometry/ToroidalCompactification/HeckeKer.txt",
+      1429
+    ],
+    [
+      "ReciprocityTheory/ReductiveGroups/ArithmeticGeometry/ExtensionDescent/SecBaseChangeAnySt.txt",
+      1340
+    ],
+    [
+      "Development/AbelianVarietyTheory/PublishedTheorems/TwistedTraceFormula/AdmissibleDiscreteSeriesOfHasParam.txt",
+      1323
+    ]
+  ],
+  "most_imports": [
+    [
+      "Formalism/HermitianCurvature/HeisenbergConjugationMeasurePreserving.txt",
+      370
+    ],
+    [
+      "GroundTheory/HeightsAndTheta/Heights/ComplexAnalyticSets/Assembly.txt",
+      320
+    ],
+    [
+      "Development/AutomorphicArithmetic/IntegralCasts/CapelliIdentities/CapelliComplements/KappaIntegralBound.txt",
+      275
+    ],
+    [
+      "GroundTheory/HeightsAndTheta/Heights/HilbertSamuel/AssemblyBase.txt",
+      231
+    ],
+    [
+      "Development/AbelianVarietyTheory/Definitions/GlobalTwisting/DiscreteSeriesCoefficientsCuspidal.txt",
+      223
+    ],
+    [
+      "Development/ResolutionOfSingularities/EmbeddedResolution/StrongResolution/AffineCentersOverSingularLocus.txt",
+      219
+    ],
+    [
+      "GroundTheory/HeightsAndTheta/Heights/LocalFiniteness/HilbertSamuelGrowthOffHypersurfacePolynomial.txt",
+      212
+    ],
+    [
+      "Development/AutomorphicArithmetic/CharacterBoxes/RiemannHypothesisOfEveryCharacter.txt",
+      208
+    ],
+    [
+      "GroundTheory/HeightsAndTheta/Heights/LocalFiniteness/UniformIntegrabilityProportionalityHolds.txt",
+      205
+    ],
+    [
+      "GroundTheory/HeightsAndTheta/Heights/LocalFiniteness/KeyFormulaVanishingCechMultInvariants.txt",
+      204
+    ],
+    [
+      "Development/AutomorphicArithmetic/ThetaCorrespondence/ThetaPairLifts/ThirdPlaceSeries/EveryCharacterOfLiteratureOfVWin.txt",
+      201
+    ],
+    [
+      "Lemmata/DualWeylPullback/DualWeylPull.txt",
+      201
+    ]
+  ],
+  "definition": "Directed edges are explicit project-module imports in the submitted source, not an elaborated proof-term dependency analysis.",
+  "source_pack_integrity": "All 175187 decoded static text files match the original source tree SHA-256.",
+  "source_tree_sha256": "27bd2a2fc971307240174cb58dd094f5d433980641079871fd2e8d1c9381f089",
+  "layers": [
+    {
+      "depth": 0,
+      "files": 1,
+      "lines": 12,
+      "groups": {
+        "Entry points": 12
+      },
+      "largest_files": [
+        [
+          "Main.txt",
+          12
+        ]
+      ]
+    },
+    {
+      "depth": 1,
+      "files": 2,
+      "lines": 18,
+      "groups": {
+        "Entry points": 16,
+        "Supplements": 2
+      },
+      "largest_files": [
+        [
+          "Statements.txt",
+          16
+        ],
+        [
+          "Supplements/Kernels/MainTheoremsAll.txt",
+          2
+        ]
+      ]
+    },
+    {
+      "depth": 2,
+      "files": 2,
+      "lines": 33,
+      "groups": {
+        "Development": 29,
+        "Supplements": 4
+      },
+      "largest_files": [
+        [
+          "Development/AutomorphicArithmetic/AutomorphicVarieties/SmallClassNumbers/CorGKOf.txt",
+          29
+        ],
+        [
+          "Supplements/Kernels/MainTheoremsCritical.txt",
+          4
+        ]
+      ]
+    },
+    {
+      "depth": 3,
+      "files": 7,
+      "lines": 356,
+      "groups": {
+        "Development": 340,
+        "Supplements": 16
+      },
+      "largest_files": [
+        [
+          "Development/AutomorphicArithmetic/AutomorphicVarieties/SmallClassNumbers/ClassNumberThree.txt",
+          115
+        ],
+        [
+          "Development/AutomorphicArithmetic/AutomorphicVarieties/SmallClassNumbers/LenEqZeroIff.txt",
+          95
+        ],
+        [
+          "Development/AutomorphicArithmetic/AutomorphicVarieties/ModularityArgument/ThresholdArguments/DenseThresholdCases/TopMainZj.txt",
+          75
+        ],
+        [
+          "Development/AutomorphicArithmetic/AutomorphicVarieties/SmallClassNumbers/OnePoint.txt",
+          41
+        ],
+        [
+          "Supplements/Kernels/MainTheorems.txt",
+          16
+        ]
+      ]
+    },
+    {
+      "depth": 4,
+      "files": 25,
+      "lines": 1648,
+      "groups": {
+        "Development": 1616,
+        "Formalism": 32
+      },
+      "largest_files": [
+        [
+          "Development/AutomorphicArithmetic/AutomorphicVarieties/ModularityArgument/ThresholdArguments/DenseThresholdCases/TemperedProductOfSquareIntegrable.txt",
+          344
+        ],
+        [
+          "Development/AutomorphicArithmetic/AutomorphicVarieties/GaloisLibrary/SelmerTransport/Places.txt",
+          164
+        ],
+        [
+          "Development/AutomorphicArithmetic/AutomorphicVarieties/CharacterLevelBounds/PlacesQ.txt",
+          152
+        ],
+        [
+          "Development/WeilBound/RepresentationTheoryGL/ArchimedeanBaseChange/ArchimedeanBaseChangeProof/BaseChangeIsobaricNOf.txt",
+          135
+        ],
+        [
+          "Development/AutomorphicArithmetic/AutomorphicVarieties/ModularityArgument/AutomorphyLifting/WeakOfAtt.txt",
+          115
+        ]
+      ]
+    },
+    {
+      "depth": 5,
+      "files": 277,
+      "lines": 18700,
+      "groups": {
+        "CompanionTheory": 140,
+        "Development": 18132,
+        "Formalism": 62,
+        "GroundTheory": 366
+      },
+      "largest_files": [
+        [
+          "Development/AutomorphicArithmetic/ThetaCorrespondence/ThetaPairLifts/ThirdPlaceSeries/EveryCharacterOfLiteratureOfVWin.txt",
+          814
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/SatakeParameters/ApplyMemTwKerOfNormalizer.txt",
+          782
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/InfinitesimalEquivalenceUnitaryGroupPQ.txt",
+          742
+        ],
+        [
+          "Development/AbelianVarietyTheory/Definitions/Divisors/DivPowerCompatTwoFormDerivativeCompOneForm.txt",
+          491
+        ],
+        [
+          "Development/AbelianVarietyTheory/PublishedTheorems/GaloisCohomology\u2082/ExistsIdealsPrimeToEqSpan.txt",
+          484
+        ]
+      ]
+    },
+    {
+      "depth": 6,
+      "files": 1639,
+      "lines": 153587,
+      "groups": {
+        "CompanionTheory": 2178,
+        "Development": 143146,
+        "Formalism": 1847,
+        "GroundTheory": 2633,
+        "PositivityTheory": 1587,
+        "ReciprocityTheory": 2196
+      },
+      "largest_files": [
+        [
+          "Development/AbelianVarietyTheory/Proofs/AbelianSchemeLawProofs/CubeTotalComplexAcyclicOfSlicesInductionOnCard.txt",
+          976
+        ],
+        [
+          "Development/AbelianVarietyTheory/Definitions/Divisors/IsKSValueOneOfRetraction.txt",
+          941
+        ],
+        [
+          "Development/AbelianVarietyTheory/Definitions/QuasicoherentCohomology/ExistsAwayFracOfMemHomLoc.txt",
+          922
+        ],
+        [
+          "Development/AbelianVarietyTheory/Definitions/NonGaloisDescent/NonemptyEquivMultiProdOne.txt",
+          897
+        ],
+        [
+          "Development/WeilBound/CoreStatements/ResolutionCharZero/RqGbnd.txt",
+          820
+        ]
+      ]
+    },
+    {
+      "depth": 7,
+      "files": 4861,
+      "lines": 572282,
+      "groups": {
+        "CompanionTheory": 17629,
+        "Development": 461568,
+        "Formalism": 37842,
+        "GroundTheory": 36611,
+        "PositivityTheory": 4984,
+        "ReciprocityTheory": 13648
+      },
+      "largest_files": [
+        [
+          "Formalism/SharpRestriction/GlobalSchurBounds/ThickPlacesCorollaryOfAnyTranslate.txt",
+          2354
+        ],
+        [
+          "Development/AbelianVarietyTheory/Definitions/Divisors/LineOppositeParabolicUnitaryLeviSectionEq.txt",
+          1651
+        ],
+        [
+          "Development/AbelianVarietyTheory/Definitions/Divisors/ExistsIsClosedImmersionGenericPoint.txt",
+          1450
+        ],
+        [
+          "Formalism/SharpRestriction/LevelLetterCocycles/DataN.txt",
+          1423
+        ],
+        [
+          "Formalism/LocalRingCardinality/RankBoundMonotoneInDimension.txt",
+          1359
+        ]
+      ]
+    },
+    {
+      "depth": 8,
+      "files": 9956,
+      "lines": 1204208,
+      "groups": {
+        "BuildAid": 8,
+        "CompanionTheory": 25200,
+        "Development": 798664,
+        "Formalism": 140709,
+        "GroundTheory": 201501,
+        "Lemmata": 56,
+        "PositivityTheory": 8619,
+        "ReciprocityTheory": 29451
+      },
+      "largest_files": [
+        [
+          "Development/AutomorphicArithmetic/IntegralCasts/CapelliIdentities/ComplexNormedInstanceCompat.txt",
+          3669
+        ],
+        [
+          "Formalism/SharpRestriction/GlobalSchurBounds/FirstClaimLemmaTwoFourOfLemmaTwoThree.txt",
+          3397
+        ],
+        [
+          "Formalism/SharpRestriction/CuspSpanNormBounds/BesselShellMomentBounds.txt",
+          2776
+        ],
+        [
+          "Formalism/SharpRestriction/Divisibility/WeightDegreeSizes.txt",
+          2692
+        ],
+        [
+          "Formalism/SharpRestriction/LevelLetterCocycles/LinearIndependentSmulOfNeZero.txt",
+          2653
+        ]
+      ]
+    },
+    {
+      "depth": 9,
+      "files": 14262,
+      "lines": 1695526,
+      "groups": {
+        "CompanionTheory": 20283,
+        "Development": 1105485,
+        "Formalism": 266465,
+        "GroundTheory": 229439,
+        "Lemmata": 501,
+        "PositivityTheory": 9440,
+        "ReciprocityTheory": 63913
+      },
+      "largest_files": [
+        [
+          "Formalism/SharpRestriction/CuspSpanNormBounds/LatticeGluingRadicals.txt",
+          9252
+        ],
+        [
+          "Formalism/SharpRestriction/CuspSpanNormBounds/BlockEstimateWords.txt",
+          4671
+        ],
+        [
+          "Formalism/SharpRestriction/GrowthBounds/TopChoiceBounds.txt",
+          4516
+        ],
+        [
+          "Development/AutomorphicArithmetic/IntegralCasts/CapelliIdentities/HloweqTransfer.txt",
+          3658
+        ],
+        [
+          "Formalism/LocalToGlobal/Divisibility/DefGroupLemmas.txt",
+          2936
+        ]
+      ]
+    },
+    {
+      "depth": 10,
+      "files": 15539,
+      "lines": 1753361,
+      "groups": {
+        "CompanionTheory": 16370,
+        "Development": 1110303,
+        "Formalism": 350704,
+        "GroundTheory": 197328,
+        "Lemmata": 1014,
+        "PositivityTheory": 11486,
+        "ReciprocityTheory": 66156
+      },
+      "largest_files": [
+        [
+          "Formalism/SharpRestriction/CuspSpanNormBounds/OscillatoryIntegralBounds.txt",
+          6333
+        ],
+        [
+          "Formalism/SharpRestriction/GrowthBounds/WittFrameLocaliserOrders.txt",
+          5833
+        ],
+        [
+          "Formalism/SharpRestriction/GrowthBounds/LatticeSystems.txt",
+          4451
+        ],
+        [
+          "Formalism/SharpRestriction/GrowthBounds/CountingStatementReduction.txt",
+          3880
+        ],
+        [
+          "Development/AutomorphicArithmetic/IntegralCasts/CapelliIdentities/SelectionLemmas.txt",
+          3547
+        ]
+      ]
+    },
+    {
+      "depth": 11,
+      "files": 15237,
+      "lines": 1677101,
+      "groups": {
+        "CompanionTheory": 15904,
+        "Development": 1044582,
+        "Formalism": 385014,
+        "GroundTheory": 147038,
+        "Lemmata": 1556,
+        "PositivityTheory": 17119,
+        "ReciprocityTheory": 65888
+      },
+      "largest_files": [
+        [
+          "Development/AutomorphicArithmetic/IntegralCasts/CapelliIdentities/FixPiIff.txt",
+          8029
+        ],
+        [
+          "Formalism/SharpRestriction/CuspSpanNormBounds/KappaEndpoints.txt",
+          6945
+        ],
+        [
+          "Development/AutomorphicArithmetic/IntegralCasts/CapelliIdentities/CovariantDegrees.txt",
+          6170
+        ],
+        [
+          "Formalism/SharpRestriction/LevelLetterCocycles/BaseChangePreservesUnitaryOf.txt",
+          4861
+        ],
+        [
+          "Formalism/FlagUnipotentLattices/MinkowskiFactorialBounds/SuperdiagonalAdditionInvariance.txt",
+          4546
+        ]
+      ]
+    },
+    {
+      "depth": 12,
+      "files": 15095,
+      "lines": 1623229,
+      "groups": {
+        "BuildAid": 4,
+        "CompanionTheory": 14763,
+        "Development": 981591,
+        "Formalism": 471852,
+        "GroundTheory": 97359,
+        "Lemmata": 1090,
+        "PositivityTheory": 1823,
+        "ReciprocityTheory": 54747
+      },
+      "largest_files": [
+        [
+          "Formalism/HermitianCurvature/HermitianCurvatureProofs/IsAdmissibleSplittingCharPairMulTwist.txt",
+          17981
+        ],
+        [
+          "Formalism/HermitianCurvature/HermitianCurvatureProofs/UnipotentCoordinatesMeasurePreserving.txt",
+          6929
+        ],
+        [
+          "Formalism/HermitianCurvature/HermitianCurvatureProofs/CoordinateCommuteRaisingConstant.txt",
+          6205
+        ],
+        [
+          "Development/AutomorphicArithmetic/IntegralCasts/CapelliIdentities/MemOfClosed.txt",
+          5746
+        ],
+        [
+          "Formalism/LocalToGlobal/KernelLattices/KernelLocalFactors/InterlaceDifferenceShiftInvariant.txt",
+          5303
+        ]
+      ]
+    },
+    {
+      "depth": 13,
+      "files": 13274,
+      "lines": 1331687,
+      "groups": {
+        "BuildAid": 4,
+        "CompanionTheory": 15953,
+        "Development": 869368,
+        "Formalism": 331957,
+        "GroundTheory": 58669,
+        "Lemmata": 951,
+        "PositivityTheory": 72,
+        "ReciprocityTheory": 54713
+      },
+      "largest_files": [
+        [
+          "Development/AutomorphicArithmetic/IntegralCasts/CapelliIdentities/FreeModuleQuotient.txt",
+          2516
+        ],
+        [
+          "Development/AutomorphicArithmetic/IntegralCasts/CapelliIdentities/RootEquality.txt",
+          2343
+        ],
+        [
+          "Formalism/MahlerMeasure/MahlerMeasureProofs/GamLead.txt",
+          1949
+        ],
+        [
+          "Formalism/PieriBlockIdeals/PieriColumnMinors/HeightDescentMinors.txt",
+          1946
+        ],
+        [
+          "Development/AutomorphicArithmetic/IntegralCasts/CapelliIdentities/ContDiffHerm.txt",
+          1727
+        ]
+      ]
+    },
+    {
+      "depth": 14,
+      "files": 11747,
+      "lines": 1094678,
+      "groups": {
+        "CompanionTheory": 13358,
+        "Development": 730158,
+        "Formalism": 260804,
+        "GroundTheory": 36437,
+        "Lemmata": 1353,
+        "ReciprocityTheory": 52568
+      },
+      "largest_files": [
+        [
+          "Formalism/PieriBlockIdeals/PieriColumnMinors/Symmetrization.txt",
+          2158
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/CuspFormEvaluations/WeightVariableFormula.txt",
+          2048
+        ],
+        [
+          "Development/AutomorphicArithmetic/IntegralCasts/CapelliIdentities/NormIndexQuadratic.txt",
+          1749
+        ],
+        [
+          "Development/AutomorphicArithmetic/IntegralCasts/CapelliIdentities/ImportsMoreExtra.txt",
+          1551
+        ],
+        [
+          "ReciprocityTheory/NeutralLocalFields/Duality.txt",
+          1523
+        ]
+      ]
+    },
+    {
+      "depth": 15,
+      "files": 10397,
+      "lines": 978650,
+      "groups": {
+        "CompanionTheory": 7995,
+        "Development": 685021,
+        "Formalism": 225806,
+        "GroundTheory": 17375,
+        "Lemmata": 309,
+        "ReciprocityTheory": 42144
+      },
+      "largest_files": [
+        [
+          "Formalism/SharpRestriction/Divisibility/AdmissibleRank/LogDiscriminantLeSquareSizeFamily.txt",
+          1828
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/IwasawaDecomposition/MovedFiniteDatumFourierExpansionChainless.txt",
+          1574
+        ],
+        [
+          "Formalism/LocalToGlobal/IndefiniteReal/FinitePlaces/InfPartOfSplitIdem.txt",
+          1525
+        ],
+        [
+          "Formalism/SharpRestriction/LevelLetterCocycles/NEqRZeroMulXPow.txt",
+          1511
+        ],
+        [
+          "Formalism/SharpRestriction/Divisibility/AdmissibleRank/FreeFamilyOfLeavesAndAdmissible.txt",
+          1438
+        ]
+      ]
+    },
+    {
+      "depth": 16,
+      "files": 9108,
+      "lines": 841698,
+      "groups": {
+        "CompanionTheory": 9735,
+        "Development": 591860,
+        "Formalism": 190556,
+        "GroundTheory": 13630,
+        "Lemmata": 293,
+        "ReciprocityTheory": 35624
+      },
+      "largest_files": [
+        [
+          "Formalism/SharpRestriction/ValuationFrobeniusEpsilon/InstLocalRingSymplecticCoefficients.txt",
+          1821
+        ],
+        [
+          "Formalism/DistinguishedUnitIdeals/DistinguishedOrderProofs/GoodOf.txt",
+          1466
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/MemOrthSucc.txt",
+          1306
+        ],
+        [
+          "Formalism/LocalToGlobal/InertKernelTheory/InertCoprimeLemmas/GlobalOrthonormalBasisFour.txt",
+          1272
+        ],
+        [
+          "Development/AbelianVarietyTheory/Definitions/AutomorphicMembership/ExistsSameData.txt",
+          1270
+        ]
+      ]
+    },
+    {
+      "depth": 17,
+      "files": 7930,
+      "lines": 730105,
+      "groups": {
+        "CompanionTheory": 8127,
+        "Development": 534113,
+        "Formalism": 144335,
+        "GroundTheory": 13615,
+        "Lemmata": 534,
+        "ReciprocityTheory": 29381
+      },
+      "largest_files": [
+        [
+          "Formalism/LocalToGlobal/InertKernelTheory/InertCoprimeLemmas/RepFrame.txt",
+          1268
+        ],
+        [
+          "Formalism/EllipticTorsion/EllipticTorsionProofs/FormalGroupPointsHomDef.txt",
+          1226
+        ],
+        [
+          "Development/AbelianVarietyTheory/Definitions/ThetaMetrics/TensorContentEqPolyContentScalarCoeffs.txt",
+          1058
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/FlagMeasures/NormalFormFlagLatticesNearUnderStabiliser.txt",
+          921
+        ],
+        [
+          "Development/AbelianVarietyTheory/Definitions/Degenerations/NormNatCastPadicAlgClOfCoprime.txt",
+          872
+        ]
+      ]
+    },
+    {
+      "depth": 18,
+      "files": 7025,
+      "lines": 578926,
+      "groups": {
+        "CompanionTheory": 6868,
+        "Development": 451347,
+        "Formalism": 86338,
+        "GroundTheory": 13445,
+        "Lemmata": 967,
+        "ReciprocityTheory": 19961
+      },
+      "largest_files": [
+        [
+          "Formalism/DistinguishedUnitIdeals/DistinguishedOrderProofs/Partners.txt",
+          1357
+        ],
+        [
+          "Formalism/SharpRestriction/LevelLetterCocycles/ArcCoordinatesOfMembership.txt",
+          1107
+        ],
+        [
+          "GroundTheory/PAdicHodge/WAEval.txt",
+          1053
+        ],
+        [
+          "Formalism/LocalToGlobal/InertKernelTheory/InertCoprimeLemmas/GenusOneWittExistsOf.txt",
+          1013
+        ],
+        [
+          "Formalism/LocalToGlobal/KernelLattices/ColumnData.txt",
+          954
+        ]
+      ]
+    },
+    {
+      "depth": 19,
+      "files": 5915,
+      "lines": 513105,
+      "groups": {
+        "BuildAid": 4,
+        "CompanionTheory": 2396,
+        "Development": 412684,
+        "Formalism": 74619,
+        "GroundTheory": 12344,
+        "Lemmata": 99,
+        "ReciprocityTheory": 10959
+      },
+      "largest_files": [
+        [
+          "Formalism/SharpRestriction/LevelLetterCocycles/EvaluationAtUniformizerPower.txt",
+          1737
+        ],
+        [
+          "Formalism/SharpRestriction/LevelLetterCocycles/RelayGeneralCaseOfAdmissible.txt",
+          1391
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/SatakeParameters/StabCardOfStabTie.txt",
+          1054
+        ],
+        [
+          "Formalism/LocalToGlobal/InertKernelTheory/InertCoprimeLemmas/HurwitzSubstituteTwoSeries.txt",
+          1013
+        ],
+        [
+          "GroundTheory/PAdicHodge/ExtRobbaUntilt.txt",
+          1006
+        ]
+      ]
+    },
+    {
+      "depth": 20,
+      "files": 5167,
+      "lines": 404149,
+      "groups": {
+        "CompanionTheory": 3625,
+        "Development": 344832,
+        "Formalism": 42963,
+        "GroundTheory": 5201,
+        "Lemmata": 190,
+        "ReciprocityTheory": 7338
+      },
+      "largest_files": [
+        [
+          "Development/WeilBound/CoreStatements/TorusUniformisation/ChowMahlerFamilies/SplitMultiplicativeHopfOrder.txt",
+          1114
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/UnramifiedDepth/SumEqOfIsHomogeneous.txt",
+          1087
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/FlagMeasures/LatticeSumOfCompactCoefficientPositivity.txt",
+          1049
+        ],
+        [
+          "Formalism/WachLatticeTwists/RealClassMaps/RealClassMapLiftEveryThirdPlace.txt",
+          947
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/UnramifiedDepth/GaugeDerivEqPairingOfIntegralGaugedLaw.txt",
+          942
+        ]
+      ]
+    },
+    {
+      "depth": 21,
+      "files": 4551,
+      "lines": 395845,
+      "groups": {
+        "CompanionTheory": 1936,
+        "Development": 347454,
+        "Formalism": 35287,
+        "GroundTheory": 5709,
+        "Lemmata": 137,
+        "ReciprocityTheory": 5322
+      },
+      "largest_files": [
+        [
+          "Development/AutomorphicArithmetic/IntegralCasts/CapelliIdentities/MulMemIntA.txt",
+          4969
+        ],
+        [
+          "Formalism/HermitianCurvature/HermitianCurvatureProofs/CutJAAsm.txt",
+          1055
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/TermSumLocalEqGlobal.txt",
+          854
+        ],
+        [
+          "Formalism/LocalToGlobal/CharacterGerms/LemmaMLin.txt",
+          848
+        ],
+        [
+          "GroundTheory/PAdicHodge/SlopeFrobenius.txt",
+          842
+        ]
+      ]
+    },
+    {
+      "depth": 22,
+      "files": 4190,
+      "lines": 322455,
+      "groups": {
+        "CompanionTheory": 1991,
+        "Development": 287664,
+        "Formalism": 27198,
+        "GroundTheory": 3186,
+        "Lemmata": 40,
+        "ReciprocityTheory": 2376
+      },
+      "largest_files": [
+        [
+          "Formalism/SharpRestriction/LevelLetterCocycles/HermFlagUnipotentAnisotropicVectorSubMem.txt",
+          1621
+        ],
+        [
+          "Formalism/SharpRestriction/LevelLetterCocycles/IdempotentMemInvariantsLetter.txt",
+          1487
+        ],
+        [
+          "Formalism/SharpRestriction/LevelLetterCocycles/LocalClauseOfFrobeniusHyps.txt",
+          1042
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/UnramifiedDepth/GoodCurvesPairingMemMaxIdeal.txt",
+          752
+        ],
+        [
+          "Formalism/LocalToGlobal/PairingIndexBounds/RowActionCoefficients/AdmissibleInterpolation/WeylComplementDetCoeffSpan.txt",
+          735
+        ]
+      ]
+    },
+    {
+      "depth": 23,
+      "files": 3740,
+      "lines": 325565,
+      "groups": {
+        "CompanionTheory": 2438,
+        "Development": 285126,
+        "Formalism": 31333,
+        "GroundTheory": 5457,
+        "Lemmata": 111,
+        "ReciprocityTheory": 1100
+      },
+      "largest_files": [
+        [
+          "Formalism/SharpRestriction/LevelLetterCocycles/UniversalGeneralOfRestriction.txt",
+          2688
+        ],
+        [
+          "Development/AutomorphicArithmetic/IntegralCasts/CapelliIdentities/IntegerSpanGenerators.txt",
+          1746
+        ],
+        [
+          "Development/AutomorphicSpectrum/Proofs/MetricProofs/HodgeCptFrameMinorValuation.txt",
+          812
+        ],
+        [
+          "Formalism/SharpRestriction/LevelLetterCocycles/LatticeMembershipPolynomialGamma.txt",
+          795
+        ],
+        [
+          "Development/AutomorphicSpectrum/Proofs/GeometryProofs/ExistsProperIntegralModel.txt",
+          770
+        ]
+      ]
+    },
+    {
+      "depth": 24,
+      "files": 3417,
+      "lines": 263943,
+      "groups": {
+        "CompanionTheory": 1156,
+        "Development": 226888,
+        "Formalism": 28251,
+        "GroundTheory": 6146,
+        "ReciprocityTheory": 1502
+      },
+      "largest_files": [
+        [
+          "Development/WeilBound/CoreStatements/HodgeTatePoints/IsPullbackWhisker.txt",
+          1333
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/FlagMeasures/HaarInvVolumeMiddleLayerEichlerLe.txt",
+          1185
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/AdjacentFlagsHeightComparison.txt",
+          819
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/InertiaEigenvalues/MemRangeOfFrobeniusEquationCyclotomicFixed.txt",
+          758
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/CubicalLineBundles/ExistsCdvrCompletionIntegralIff.txt",
+          732
+        ]
+      ]
+    },
+    {
+      "depth": 25,
+      "files": 2718,
+      "lines": 226698,
+      "groups": {
+        "CompanionTheory": 1073,
+        "Development": 198728,
+        "Formalism": 23897,
+        "GroundTheory": 1735,
+        "Lemmata": 31,
+        "ReciprocityTheory": 1234
+      },
+      "largest_files": [
+        [
+          "Formalism/WachLatticeTwists/RealDisplaySplitting/StatementB.txt",
+          1402
+        ],
+        [
+          "Development/WeilBound/CoreStatements/PluriharmonicCharts/LeviDiagonalOfIsPeriodChart.txt",
+          1086
+        ],
+        [
+          "Formalism/SharpRestriction/LevelLetterCocycles/ExistsGammaPi0EqPi0Mul.txt",
+          950
+        ],
+        [
+          "Development/AbelianVarietyTheory/Counterexamples/JetSurvey/PairingIsoPullback.txt",
+          885
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/PairCoverHodgeHeight.txt",
+          693
+        ]
+      ]
+    },
+    {
+      "depth": 26,
+      "files": 2198,
+      "lines": 171849,
+      "groups": {
+        "CompanionTheory": 2293,
+        "Development": 149930,
+        "Formalism": 16109,
+        "GroundTheory": 2581,
+        "ReciprocityTheory": 936
+      },
+      "largest_files": [
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/ToroidalModelNormalSchemeExtension.txt",
+          869
+        ],
+        [
+          "Development/WeilBound/CoreStatements/TorusUniformisation/ChowMahlerFamilies/DegreeMultiplicationNorm.txt",
+          654
+        ],
+        [
+          "Development/AutomorphicSpectrum/Proofs/GeometryProofs/TorusExtensionAbelianQuotient.txt",
+          572
+        ],
+        [
+          "Development/AutomorphicSpectrum/Proofs/MetricProofs/FlagGapHolomorphicPullbackFourth.txt",
+          569
+        ],
+        [
+          "Development/WeilBound/CoreStatements/PlurisubharmonicCones/EmbEquivSymmApply.txt",
+          531
+        ]
+      ]
+    },
+    {
+      "depth": 27,
+      "files": 1742,
+      "lines": 134407,
+      "groups": {
+        "CompanionTheory": 601,
+        "Development": 122607,
+        "Formalism": 9570,
+        "GroundTheory": 814,
+        "ReciprocityTheory": 815
+      },
+      "largest_files": [
+        [
+          "Development/AbelianVarietyTheory/Proofs/InertiaEigenvalues/UnitaryRepresentativesExistVector.txt",
+          648
+        ],
+        [
+          "Formalism/LocalToGlobal/InertKernelTheory/InertCoprimeLemmas/SharpPoly.txt",
+          596
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/UnitaryExistence/SecondCubicalLawIffClause.txt",
+          588
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/ExistsProductDegenerationDataSum.txt",
+          567
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DecoratedLatticeProofs/TrueGeometryTupleFreeValue.txt",
+          517
+        ]
+      ]
+    },
+    {
+      "depth": 28,
+      "files": 1387,
+      "lines": 97628,
+      "groups": {
+        "CompanionTheory": 1706,
+        "Development": 87803,
+        "Formalism": 5610,
+        "GroundTheory": 2267,
+        "ReciprocityTheory": 242
+      },
+      "largest_files": [
+        [
+          "Development/AbelianVarietyTheory/Definitions/GaloisGeometry/BlockRowSubstitutionPreservesComplexSpan.txt",
+          2118
+        ],
+        [
+          "Development/WeilBound/CoreStatements/TorusUniformisation/ChowMahlerFamilies/KernelRankMultiplicationCharP.txt",
+          1231
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/HomogeneousIdeals/BijectiveProdQuotientOfMemAnnihilatorKer.txt",
+          713
+        ],
+        [
+          "Formalism/SharpRestriction/LevelLetterCocycles/DvrLatticeRank/EigenRingInvariants.txt",
+          678
+        ],
+        [
+          "Formalism/PadicSubsetSums/CentralIdempotents/GL2UnipotentBruhatDecomposition.txt",
+          616
+        ]
+      ]
+    },
+    {
+      "depth": 29,
+      "files": 1078,
+      "lines": 75020,
+      "groups": {
+        "CompanionTheory": 471,
+        "Development": 67603,
+        "Formalism": 3292,
+        "GroundTheory": 3637,
+        "ReciprocityTheory": 17
+      },
+      "largest_files": [
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/FlagBundleLineBundleChernRelation.txt",
+          659
+        ],
+        [
+          "Development/AutomorphicSpectrum/Proofs/AlgebraProofs/AlphaKernelDerivativeVanishes.txt",
+          652
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/SiegelThetaTransformation/ShortIsotropicVectorsExistenceSuccOfVeryShortSte.txt",
+          533
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/SatakeParameters/NormProdCmEmbeddingsEqOneOfInert.txt",
+          530
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DecoratedLatticeProofs/SplitPlaceComponentKeepsLevelFunctional.txt",
+          465
+        ]
+      ]
+    },
+    {
+      "depth": 30,
+      "files": 806,
+      "lines": 53949,
+      "groups": {
+        "CompanionTheory": 29,
+        "Development": 49403,
+        "Formalism": 2863,
+        "GroundTheory": 1470,
+        "ReciprocityTheory": 184
+      },
+      "largest_files": [
+        [
+          "Development/AbelianVarietyTheory/Proofs/ModuliProofs/ExistsUniqueRigMulRight.txt",
+          745
+        ],
+        [
+          "Development/WeilBound/CoreStatements/HodgeTatePoints/PlenPlaces.txt",
+          516
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/InertiaEigenvalues/CrystallineEvalRingHomFrobeniusTaylor.txt",
+          449
+        ],
+        [
+          "Formalism/LocalToGlobal/KernelLattices/DeterminantCokernelCount/CokernelIndexFactors/ThirdMomentLaw.txt",
+          434
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/ExistsEtaleNeighbourhoodFinitePieceIsolatedPoint.txt",
+          389
+        ]
+      ]
+    },
+    {
+      "depth": 31,
+      "files": 622,
+      "lines": 46565,
+      "groups": {
+        "Development": 42046,
+        "Formalism": 2384,
+        "GroundTheory": 2135
+      },
+      "largest_files": [
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/ComapMaximalIdealEqOrigin.txt",
+          558
+        ],
+        [
+          "Development/AutomorphicSpectrum/Proofs/MetricProofs/FlagAdjacentFrameComparison.txt",
+          512
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/SiegelThetaTransformation/EmbeddingCompatibleWithWeilAndDenominator.txt",
+          493
+        ],
+        [
+          "Development/AutomorphicSpectrum/Proofs/MetricProofs/FlagAdjacentOrbitComparison.txt",
+          485
+        ],
+        [
+          "GroundTheory/HeightsAndTheta/Heights/DiscreteValuationNumbers/PSegreClosureNumber.txt",
+          404
+        ]
+      ]
+    },
+    {
+      "depth": 32,
+      "files": 378,
+      "lines": 30621,
+      "groups": {
+        "Development": 28649,
+        "Formalism": 829,
+        "GroundTheory": 1010,
+        "ReciprocityTheory": 133
+      },
+      "largest_files": [
+        [
+          "Development/WeilBound/CoreStatements/TorusUniformisation/ChowMahlerFamilies/ModelPushforwardFibreDegree.txt",
+          1609
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/JetHarmonics/LevelModuleFormEqIntegralOfCompactCoeff.txt",
+          704
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianGenericExtendsOverOpen.txt",
+          506
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/LatticeExtensionOverCodimOnePoints.txt",
+          466
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/LatticeExtensionCompleteToDvr.txt",
+          401
+        ]
+      ]
+    },
+    {
+      "depth": 33,
+      "files": 265,
+      "lines": 15785,
+      "groups": {
+        "Development": 14798,
+        "Formalism": 640,
+        "ReciprocityTheory": 347
+      },
+      "largest_files": [
+        [
+          "ReciprocityTheory/ReductiveGroups/ArithmeticGeometry/PlaceDivisors/TopLimitModules/LimJMemSmulTop.txt",
+          347
+        ],
+        [
+          "Development/WeilBound/CoreStatements/PlurisubharmonicCones/CommGroupMulMulEqMulInvMulMulMul.txt",
+          333
+        ],
+        [
+          "Development/WeilBound/CoreStatements/AmpleLineBundles/KillsOverOfSquareZeroIdeal.txt",
+          300
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/ExistsTranslateCubicalSymmetricLineBundleTwoTors.txt",
+          269
+        ],
+        [
+          "Development/WeilBound/CoreStatements/TorusUniformisation/ChowMahlerFamilies/MaximalTorusInFibre.txt",
+          260
+        ]
+      ]
+    },
+    {
+      "depth": 34,
+      "files": 178,
+      "lines": 11637,
+      "groups": {
+        "Development": 11314,
+        "Formalism": 281,
+        "ReciprocityTheory": 42
+      },
+      "largest_files": [
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/ExistsClosureBaseChangeMapsAndRetraction.txt",
+          475
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/ExistsFinFreeAwayOfFinitePresentation.txt",
+          413
+        ],
+        [
+          "Development/AutomorphicSpectrum/Proofs/MetricProofs/FrameChangeRegularEntries.txt",
+          374
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/SatakeParameters/TopLevelDatumTransformAtTwistPrimeUnderLevels.txt",
+          255
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/VectorExtensionSurjectiveField.txt",
+          247
+        ]
+      ]
+    },
+    {
+      "depth": 35,
+      "files": 122,
+      "lines": 8099,
+      "groups": {
+        "Development": 7872,
+        "Formalism": 227
+      },
+      "largest_files": [
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/RatioGenerationModMaxIdealOfClosedFibre.txt",
+          309
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/GroupPullbackTripleProductMapLift.txt",
+          301
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/ExistsRescaledLineBundlePowerIsoGenerator.txt",
+          236
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/SatakeParameters/GlobLatCompanOfLev.txt",
+          217
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/TranslatedCubicalBundleClosedFibreUniformisation.txt",
+          213
+        ]
+      ]
+    },
+    {
+      "depth": 36,
+      "files": 88,
+      "lines": 5004,
+      "groups": {
+        "Development": 4771,
+        "Formalism": 154,
+        "ReciprocityTheory": 79
+      },
+      "largest_files": [
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/SemilinearRankComparison.txt",
+          410
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/ExistsCarriedSectionNonzeroClosedFibre.txt",
+          282
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/FreeOfIsIntegrallyClosed.txt",
+          258
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/EtaleOfEtaleAtHeightOnePrimes.txt",
+          201
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/SchlessingerFlatFibreProduct.txt",
+          193
+        ]
+      ]
+    },
+    {
+      "depth": 37,
+      "files": 67,
+      "lines": 5655,
+      "groups": {
+        "Development": 5592,
+        "Formalism": 63
+      },
+      "largest_files": [
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/ExistsIsoUniformisationTranslateOrderTwo.txt",
+          635
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/AlgebraMapTmulOne.txt",
+          425
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/ExistsOrderTwoPointTorusExtensionTranslate.txt",
+          367
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/AppEqZeroOfSval.txt",
+          276
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/NormalisedTwistedFactorValueAtLatticePoint.txt",
+          232
+        ]
+      ]
+    },
+    {
+      "depth": 38,
+      "files": 39,
+      "lines": 2457,
+      "groups": {
+        "Development": 2435,
+        "Formalism": 22
+      },
+      "largest_files": [
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/ExistsCarriedFrameTheoremOfCube.txt",
+          303
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/FrameCoefficientsDescendFiniteFreeAffineOpen.txt",
+          212
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/SatakeParameters/CompanionLatticeAdelicLatticeLocalizationEq.txt",
+          206
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/MapsAtExpOfVal.txt",
+          193
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/AnnihilatorQuotientSmulTopOfFree.txt",
+          149
+        ]
+      ]
+    },
+    {
+      "depth": 39,
+      "files": 25,
+      "lines": 1909,
+      "groups": {
+        "Development": 1732,
+        "Formalism": 177
+      },
+      "largest_files": [
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbhyankarResidueFieldIsSeparable.txt",
+          221
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/PsiTwistedEqPsiMulCharacterOfPoint.txt",
+          206
+        ],
+        [
+          "Formalism/SharpRestriction/GrowthBounds/MonomialFactorials/RestTMHypOf.txt",
+          177
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbhyankarRamificationIdxEqOne.txt",
+          176
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/DepthGeThreeFiniteEtalePuncturedRegular.txt",
+          160
+        ]
+      ]
+    },
+    {
+      "depth": 40,
+      "files": 38,
+      "lines": 1705,
+      "groups": {
+        "Development": 1482,
+        "Formalism": 223
+      },
+      "largest_files": [
+        [
+          "Formalism/SharpRestriction/GrowthBounds/MonomialFactorials/ExponentMatrixFirstDepthEq.txt",
+          223
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbhyankarExistsLocalKummerElement.txt",
+          137
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/SatakeParameters/HostHomToColumnFieldHomMemPeriodLatticeIff.txt",
+          125
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/MaximalIdealSpanImageUniformizer.txt",
+          111
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/FiniteIntegralClosureOfFormallyUnramified.txt",
+          109
+        ]
+      ]
+    },
+    {
+      "depth": 41,
+      "files": 23,
+      "lines": 1856,
+      "groups": {
+        "Development": 1671,
+        "Formalism": 185
+      },
+      "largest_files": [
+        [
+          "Formalism/SharpRestriction/GrowthBounds/MonomialFactorials/DimYOvr.txt",
+          185
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/ExistsTranslatedExpansionCoefficients.txt",
+          174
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/KummerResidueMemAdjoinUnit.txt",
+          156
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/ExistsFiniteFreeEtaleLift.txt",
+          139
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/LocalizationNormalizationRootAdjoinIsDVR.txt",
+          120
+        ]
+      ]
+    },
+    {
+      "depth": 42,
+      "files": 25,
+      "lines": 447,
+      "groups": {
+        "Development": 330,
+        "Formalism": 117
+      },
+      "largest_files": [
+        [
+          "Formalism/SharpRestriction/GrowthBounds/MonomialFactorials/LettersExt.txt",
+          117
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/LiftCompPG.txt",
+          46
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/MemIdealTransformOfForallSmulMem.txt",
+          45
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/ExistsGlobalIsoTranslatedBundleLevelComparisonStatement.txt",
+          28
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/ExistsGeneratorRatioTranslationTwistIsosStatement.txt",
+          26
+        ]
+      ]
+    },
+    {
+      "depth": 43,
+      "files": 24,
+      "lines": 2057,
+      "groups": {
+        "Development": 1926,
+        "Formalism": 131
+      },
+      "largest_files": [
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/AlgHomLiftSquareZeroOfFormallyEtaleAwayDepth.txt",
+          394
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/LocalizationIntegralClosureArtinianReducedDomain.txt",
+          169
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/ExistsGlobalIsoTranslatedBundleLevelComparison.txt",
+          166
+        ],
+        [
+          "Development/AbelianVarietyTheory/Proofs/DivisorProofs/ExistsGeneratorRatioTranslationTwistIsos.txt",
+          132
+        ],
+        [
+          "Formalism/SharpRestriction/GrowthBounds/MonomialFactorials/BoxOfFibres.txt",
+          131
+        ]
+      ]
+    }
+  ],
+  "layer_definition": "Shortest explicit project-import distance from Main.txt; Main has depth 0. Every reachable file is assigned to exactly one depth, so shared dependencies are counted once.",
+  "layer_total_lines": 17374215,
+  "layer_total_files": 175187
+}
