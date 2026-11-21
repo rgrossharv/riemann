@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Generate crawlable entry pages from the archive's shared HTML."""
 from html import escape
+from hashlib import sha256
 from pathlib import Path
 import re
 
@@ -40,11 +41,25 @@ def write_text(path, value):
     temporary.replace(path)
 
 
+def published_template():
+    website = ROOT / "website"
+    revision = sha256()
+    for asset in sorted(website.rglob("*")):
+        if asset.is_file() and asset.suffix in {".css", ".js", ".ttf", ".wasm"}:
+            revision.update(asset.relative_to(website).as_posix().encode("utf-8") + b"\0")
+            revision.update(sha256(asset.read_bytes()).digest())
+    version = revision.hexdigest()[:12]
+    template = (website / "index.html").read_text(encoding="utf-8")
+    return re.sub(r'((?:href|src)="(?:style\.css|interface\.css|app\.js|zeta-spiral\.js))"',
+                  lambda match: f'{match[1]}?v={version}"', template)
+
+
 def write_pages(destination):
-    template = (ROOT / "website/index.html").read_text(encoding="utf-8")
+    template = published_template()
     origin = "https://" + (ROOT / "CNAME").read_text(encoding="utf-8").strip()
     sitemap = [origin + "/"]
     destination.mkdir(parents=True, exist_ok=True)
+    write_text(destination / "index.html", template)
 
     for view, (title, description, visible) in PAGES.items():
         url = f"{origin}/{view}.html"

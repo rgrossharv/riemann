@@ -544,6 +544,8 @@ body:is([data-view="extras"], [data-view="search"], [data-view="theorem"]) .read
 .document .file-breadcrumbs { padding: .36rem .7rem; }
 .document .document-foot { padding: .36rem .7rem; }
 .document .text-surface { min-height: 100px; }
+#lean-editor { position: absolute; inset: 0; }
+.text-surface:not(.editor-ready) #lean-editor { visibility: hidden; }
 #lean-editor :is(.monaco-editor-background, .monaco-editor .margin) { background-color: var(--paper); }
 .empty-reader { padding: 3rem 1.25rem; text-align: center; }
 .empty-reader button { margin-top: 1rem; }

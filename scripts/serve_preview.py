@@ -21,20 +21,23 @@ class StaticHandler(SimpleHTTPRequestHandler):
 def synchronize():
     times = {}
     while True:
+        changed = False
         for source in (ROOT / 'website').rglob('*'):
             if not source.is_file():
                 continue
             relative = source.relative_to(ROOT / 'website')
             stamp = source.stat().st_mtime_ns
             if times.get(str(relative)) != stamp:
-                target = ROOT / 'dist' / relative
-                target.parent.mkdir(parents=True, exist_ok=True)
-                temporary = target.with_suffix(target.suffix + '.tmp')
-                shutil.copyfile(source, temporary)
-                temporary.replace(target)
-                if relative == Path('index.html'):
-                    write_pages(ROOT / 'dist')
+                if relative != Path('index.html'):
+                    target = ROOT / 'dist' / relative
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    temporary = target.with_suffix(target.suffix + '.tmp')
+                    shutil.copyfile(source, temporary)
+                    temporary.replace(target)
                 times[str(relative)] = stamp
+                changed = True
+        if changed:
+            write_pages(ROOT / 'dist')
         time.sleep(1)
 
 

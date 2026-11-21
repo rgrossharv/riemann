@@ -14,6 +14,7 @@ const entryView = document.body.dataset.view;
 const entryTitle = document.title;
 const themeButton = $('theme-button');
 const themeRoot = document.documentElement;
+const assetVersion = new URL(import.meta.url).searchParams.get('v');
 let worker, archivePromise, statisticsPromise, siteDetailsPromise;
 let inputTimer;
 let dependencyExplorer;
@@ -43,7 +44,43 @@ window.addEventListener('pageshow', event => {
   }
 });
 
-window.MonacoEnvironment={getWorker:()=>new Worker(new URL('./assets/editor-worker.js',import.meta.url),{type:'module'})};
+function frontendAsset(path) {
+  const url = new URL(path, import.meta.url);
+  if (assetVersion) url.searchParams.set('v', assetVersion);
+  return url;
+}
+
+window.MonacoEnvironment = {
+  getWorker: () => new Worker(frontendAsset('./assets/editor-worker.js'), {type: 'module'}),
+};
+
+async function loadSyntaxReader() {
+  window.__leanReaderPhase = 'Loading editor module and stylesheet';
+  const css = document.createElement('link');
+  css.rel = 'stylesheet';
+  css.href = frontendAsset('./assets/lean-editor.css').href;
+  const stylesheet = new Promise((resolve, reject) => {
+    css.onload = resolve;
+    css.onerror = () => reject(new Error('Could not load the editor stylesheet.'));
+    document.head.append(css);
+  });
+  try {
+    const [module] = await Promise.all([
+      import(frontendAsset('./assets/lean-editor.js').href),
+      stylesheet,
+    ]);
+    const container = $('lean-editor');
+    container.hidden = false;
+    return await module.createLeanReader(container, ({line}) => {
+      $('line-input').value = line;
+      $('document-position').textContent = `Line ${number(line)}`;
+    });
+  } catch (problem) {
+    css.remove();
+    throw problem;
+  }
+}
+
 function error(message) { $('error').textContent = message; $('error').hidden = false; }
 async function unpack(url) {
   const response = await fetch(url);
@@ -141,7 +178,7 @@ $('search-form').onsubmit = event => {
   $('cancel-search').hidden = false;
   $('result-count').textContent = 'Searching…';
   if (!worker) {
-    worker = new Worker('search-worker.js');
+    worker = new Worker(frontendAsset('./search-worker.js'));
     worker.onmessage = showSearchResults;
   }
   worker.postMessage({type: 'search', id: ++searchId, query});
@@ -342,25 +379,25 @@ async function route() {
     downloadURL = URL.createObjectURL(new Blob([text], {type: 'text/plain;charset=utf-8'}));
     $('download-lean').href = downloadURL; $('download-lean').download = fileName;
     $('find-input').value = params.get('find') || ''; findMatches(true);
-    let restored=false;
-    try{
-      if(!leanViewPromise){
-        window.__leanReaderPhase='Loading editor module';
-        $('lean-editor').hidden=false;$('text-surface').classList.add('editor-ready');
-        const css=document.createElement('link');css.rel='stylesheet';css.href='assets/lean-editor.css';document.head.append(css);
-        leanViewPromise=import('./assets/lean-editor.js').then(module=>module.createLeanReader($('lean-editor'),({line})=>{$('line-input').value=line;$('document-position').textContent=`Line ${number(line)}`;}));
-      }
-      leanView=await leanViewPromise;
-      if(token!==loadId)return;
-      restored=leanView.open(displayPath,text);leanView.setWrap($('wrap-text').checked);
+    let restored = false;
+    try {
+      leanViewPromise ??= loadSyntaxReader();
+      const syntaxReader = await leanViewPromise;
+      if (token !== loadId) return;
+      $('lean-editor').hidden = false;
+      restored = syntaxReader.open(displayPath, text);
+      syntaxReader.setWrap($('wrap-text').checked);
+      leanView = syntaxReader;
+      $('text-surface').classList.add('editor-ready');
       const lastOpened = recentFiles.indexOf(path);
       if (lastOpened !== -1) recentFiles.splice(lastOpened, 1);
       recentFiles.push(path);
       if (recentFiles.length > 12) leanView.close(leanPath(recentFiles.shift()));
-      requestAnimationFrame(()=>leanView.layout());
-    }catch(problem){
+      requestAnimationFrame(() => syntaxReader.layout());
+    } catch (problem) {
       if (token !== loadId) return;
-      $('lean-editor').hidden=true;
+      leanView = undefined;
+      $('lean-editor').hidden = true;
       $('text-surface').classList.remove('editor-ready');
       error('Syntax reader could not load: '+problem.message);
     }

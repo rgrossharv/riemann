@@ -100,6 +100,10 @@ Individual files can be browsed with Lean syntax colors, line numbers, find,
 folding, and an expandable repository tree. File downloads preserve the
 original bytes. Public visitors have no editing/upload/write endpoint.
 
+The local preview and Pages use the committed editor bundle in website/assets/.
+If you change editor-src/, run npm ci and npm run build:editor, then commit
+the updated bundle.
+
 The dependency layer profile and folder treemap use exact line counts on
 linear scales.
 Layer = shortest project-import distance from Main, with each file assigned
